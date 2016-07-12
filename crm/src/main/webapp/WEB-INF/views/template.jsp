@@ -32,15 +32,20 @@
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper" style="background-image: url(/static/dist/img/asanoha-400px.png)">
         <!-- Content Header (Page header) -->
-        <section class="content-header">
-            <h1>
-                首页
-                <small>客户关系管理系统</small>
-            </h1>
-            <ol class="breadcrumb">
+        <section class="content">
+            <ol class="breadcrumb" style="background-color: transparent">
                 <li><a href="#"><i class="fa fa-dashboard"></i>主页</a></li>
-                <li class="active">首页</li>
+                <li class="active">公告列表</li>
             </ol>
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">公告列表</h3>
+
+                </div>
+                <div class="box-body">
+
+                </div>
+            </div>
         </section>
 
         <!-- Main content -->

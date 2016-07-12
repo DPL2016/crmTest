@@ -36,7 +36,7 @@
     <div class="content-wrapper" style="background-image: url(/static/dist/img/asanoha-400px.png)">
         <!-- Content Header (Page header) -->
         <section class="content">
-            <ol class="breadcrumb">
+            <ol class="breadcrumb" style="background-color: transparent">
                 <li><a href="#"><i class="fa fa-dashboard"></i>主页</a></li>
                 <li class="active">公告列表</li>
             </ol>
@@ -45,7 +45,7 @@
                     <h3 class="box-title">公告列表</h3>
                     <shiro:hasRole name="经理">
                         <div class="box-tools pull-right">
-                            <a href="/notice/new" class="btn btn-xs btn-success"><i class="fa fa-pencil"></i></a>
+                            <a href="/notice/new" class="btn btn-md btn-success"><i class="fa fa-pencil"></i></a>
                         </div>
                     </shiro:hasRole>
                 </div>
@@ -53,12 +53,9 @@
                     <table class="table" id="noticeTable">
                         <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>用户ID</th>
-                            <th>真实姓名</th>
+                            <th>发布人</th>
                             <th>标题</th>
                             <th>时间</th>
-                            <th>详细信息</th>
                         </tr>
                         </thead>
                         <tbody></tbody>
@@ -99,17 +96,14 @@
             ordering:false,
             "autoWidth":false,
             columns:[
-                {"data":"id"},
-                {"data":"userid"},
                 {"data":"realname"},
-                {"data":"title"},
+                {"data":function(row){
+                    return "<a href='/notice/"+row.id+"'>"+row.title+"</a>"
+                }},
                 {"data":function(row){
                     var timestamp = row.createtime;
                     var day = moment(timestamp);
                     return day.format("YYYY-MM-DD HH:mm");
-                }},
-                {"data":function(row){
-                    return "<a href='#'>查看详细</a>";
                 }}
             ],
             "language": { //定义中文

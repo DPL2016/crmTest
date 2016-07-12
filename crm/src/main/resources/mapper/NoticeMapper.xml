@@ -12,6 +12,8 @@
                 realname like concat('%',#{keyword},'%')
             </if>
         </where>
+        order by id desc
+        limit ${start},${length}
     </select>
     <select id="count" resultType="long">
         SELECT COUNT(*) FROM t_notice
@@ -24,5 +26,9 @@
                 realname like concat('%',#{keyword},'%')
             </if>
         </where>
+    </select>
+
+    <select id="findById" resultType="Notice">
+        SELECT * FROM t_notice WHERE id = #{id}
     </select>
 </mapper>
