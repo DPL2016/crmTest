@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaishengit.mapper.UserMapper">
+    <cache/>
+    <select id="findByUsername" parameterType="string" resultType="User">
+      SELECT * FROM t_user WHERE username = #{username}
+    </select>
+
+    <update id="updateUser">
+        UPDATE t_user
+        <set>
+             <if test="password != null and password != ''">
+                 password = #{password},
+             </if>
+             <if test="realname != null and realname != ''">
+                 realname = #{realname},
+             </if>
+             <if test="weixin != null and weixin != ''">
+                 weixin = #{weixin},
+             </if>
+             <if test="roleid != null and roleid != ''">
+                 roleid = #{roleid},
+             </if>
+             enable=#{enable}
+         </set>
+        where id = #{id}
+    </update>
+    <select id="findByParam" resultType="User">
+        SELECT t_user.*,t_role.id AS 'role.id',t_role.rolename AS 'role.rolename' FROM t_user
+        INNER JOIN t_role ON t_user.roleid = t_role.id
+        <where>
+            <if test="keyword!=null and keyword !=''">
+                username LIKE concat('%',#{keyword},'%') or realname like concat('%',#{keyword},'%')
+            </if>
+        </where>
+        order by t_user.id desc
+        limit ${start},${length}
+    </select>
+    <select id="countUser" resultType="long">
+        SELECT COUNT(*) FROM t_user
+    </select>
+    <select id="countByParam" resultType="long">
+        SELECT COUNT(*) FROM t_user
+        <where>
+            <if test="keyword!=null and keyword !=''">
+                username LIKE concat('%',#{keyword},'%') or realname like concat('%',#{keyword},'%')
+            </if>
+        </where>
+    </select>
+    <insert id="save">
+        INSERT  INTO t_user(username, password, realname, weixin, roleid, enable)
+        VALUES (#{username},#{password},#{realname},#{weixin},#{roleid},#{enable})
+    </insert>
+
+    <select id="findUserByUserName" resultType="User">
+        SELECT * FROM t_user WHERE username = #{username}
+    </select>
+
+    <select id="findById" resultType="User">
+        SELECT * FROM t_user WHERE id = #{id}
+    </select>
+</mapper>
