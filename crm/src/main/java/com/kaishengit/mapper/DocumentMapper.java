@@ -9,4 +9,6 @@ public interface DocumentMapper {
     List<Document> findDocumentByFid(Integer fid);
 
     void save(Document document);
+
+    Document findDocumentById(Integer id);
 }

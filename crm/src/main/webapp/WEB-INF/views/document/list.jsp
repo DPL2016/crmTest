@@ -39,12 +39,27 @@
 
                     <div class="box box-primary">
                         <ol class="breadcrumb">
-                            <li><a href="/home"><i class="fa fa-dashboard"></i>首页</a></li>
-                            <li class="active">文档管理</li>
+                            <li><a href="/home"><i class="fa fa-home"></i>首页</a></li>
+                            <c:choose>
+                                <c:when test="${fid==0}">
+                                    <li class="active">文档管理</li>
+                                </c:when>
+                                <c:otherwise><li class="active">
+                                    <a href="/doc">文档管理</a></li>
+                                    <li class="active">文档管理-${fid}</li>
+                                </c:otherwise>
+                            </c:choose>
                         </ol>
                         <div class="box-header with-border">
 
-                            <h3 class="box-title">文档管理-${fid}</h3>
+                            <c:choose>
+                                <c:when test="${fid==0}">
+                                    <h3 class="box-title">文档管理</h3>
+                                </c:when>
+                                <c:otherwise>
+                                    <h3 class="box-title">文档管理-${fid}</h3>
+                                </c:otherwise>
+                            </c:choose>
                             <div class="box-tools">
                                 <span id="uploadBtn"><span class="text"><i class="fa fa-upload"></i> 上传文件</span></span>
                                 <button class="btn btn-bitbucket btn-xs" id="newDir"><i class="fa fa-folder"></i> 新建文件夹

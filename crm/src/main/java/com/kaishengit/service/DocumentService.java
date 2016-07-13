@@ -82,4 +82,7 @@ public class DocumentService {
         documentMapper.save(document);
     }
 
+    public Document findDocumentById(Integer id) {
+        return documentMapper.findDocumentById(id);
+    }
 }
