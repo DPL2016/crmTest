@@ -3,6 +3,9 @@ package com.kaishengit.controller;
 import com.kaishengit.exception.NotFoundException;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +20,7 @@ public class FilePreviewController {
     private String filePath;
 
     @RequestMapping("/preview/{fileName}")
-    public void previewFile(@PathVariable String fileName, HttpServletResponse response) throws IOException {
+    /*public void previewFile(@PathVariable String fileName, HttpServletResponse response) throws IOException {
         File file = new File(filePath,fileName);
         if (!file.exists()){
             throw new NotFoundException();
@@ -28,5 +31,16 @@ public class FilePreviewController {
         outputStream.flush();
         outputStream.close();
         inputStream.close();
+    }*/
+
+    //用SpringMVC的方式返回Outputstream
+    public ResponseEntity<InputStreamResource> previewFile(@PathVariable String fileName) throws FileNotFoundException {
+        File file = new File(filePath,fileName);
+        if (!file.exists()){
+            throw new NotFoundException();
+        }
+        FileInputStream inputStream = new FileInputStream(file);
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(new InputStreamResource(inputStream));
     }
+
 }
