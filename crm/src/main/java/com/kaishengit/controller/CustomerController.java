@@ -49,6 +49,7 @@ public class CustomerController {
         Map<String,Object>param = Maps.newHashMap();
         param.put("start",start);
         param.put("length",length);
+        param.put("keyword",keyword);
         List<Customer> customerList = customerService.findCustomerByParam(param);
         Long count = customerService.count();
         Long filterCount = customerService.countByParam(param);

@@ -8,6 +8,9 @@
           <if test="userid != null and userid !='' ">
               userid = #{userid} or (userid is null or userid = '' )
           </if>
+            <if test="keyword != null and keyword !='' ">
+                name LIKE concat('%',#{keyword},'%') or tel LIKE concat('%',#{keyword},'%') or pinyin LIKE concat('%',#{keyword},'%')
+            </if>
         </where>
         order by id desc
         limit ${start},${length}
@@ -22,6 +25,9 @@
         <where>
             <if test="userid != null and userid !='' ">
                 userid = #{userid} or (userid is null or userid = '' )
+            </if>
+            <if test="keyword != null and keyword !='' ">
+                name LIKE concat('%',#{keyword},'%') or tel LIKE concat('%',#{keyword},'%') or pinyin LIKE concat('%',#{keyword},'%')
             </if>
         </where>
     </select>
