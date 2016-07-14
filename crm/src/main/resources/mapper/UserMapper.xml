@@ -4,7 +4,8 @@
 <mapper namespace="com.kaishengit.mapper.UserMapper">
     <cache/>
     <select id="findByUsername" parameterType="string" resultType="User">
-      SELECT * FROM t_user WHERE username = #{username}
+       SELECT t_user.*,t_role.id as 'role.id',t_role.rolename as 'role.rolename' FROM t_user
+      INNER JOIN t_role on t_user.roleid = t_role.id WHERE t_user.username = #{username}
     </select>
 
     <update id="updateUser">
@@ -54,7 +55,7 @@
     </insert>
 
     <select id="findUserByUserName" resultType="User">
-        SELECT * FROM t_user WHERE username = #{username}
+         SELECT * FROM t_user WHERE username = #{username}
     </select>
 
     <select id="findById" resultType="User">
