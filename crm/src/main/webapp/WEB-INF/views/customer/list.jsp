@@ -41,8 +41,7 @@
                     <div class="box box-primary">
                         <ol class="breadcrumb">
                             <li><a href="/home"><i class="fa fa-home"></i>首页</a></li>
-
-                            <a href="/customer">客户管理</a></li>
+                            <li>客户管理</li>
                         </ol>
                         <div class="box-header with-border">
 
@@ -83,46 +82,103 @@
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                             aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">新增客户</h4>
+                                    <h4 class="modal-title">编辑客户</h4>
+                                </div>
+                    <div class="modal-body">
+                        <form id="saveCompanyForm">
+                            <div class="form-group">
+                                <label>类型</label>
+                                <div>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="type" value="person" checked
+                                               id="radioPerson"> 个人
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="type" value="company"
+                                               id="radioCompany"> 公司
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>名称</label>
+                                <input type="text" class="form-control" name="name">
+                            </div>
+                            <div class="form-group">
+                                <label>电话</label>
+                                <input type="text" class="form-control" name="tel">
+                            </div>
+                            <div class="form-group">
+                                <label>微信</label>
+                                <input type="text" class="form-control" name="weixin">
+                            </div>
+                            <div class="form-group">
+                                <label>邮箱</label>
+                                <input type="text" class="form-control" name="email">
+                            </div>
+                            <div class="form-group">
+                                <label>地址</label>
+                                <input type="text" class="form-control" name="address">
+                            </div>
+                            <div class="form-group">
+                                <label>等级</label>
+                                <select name="level" class="form-control">
+                                    <option value=""></option>
+                                    <option value="★">★</option>
+                                    <option value="★★">★★</option>
+                                    <option value="★★★">★★★</option>
+                                    <option value="★★★★">★★★★</option>
+                                    <option value="★★★★★">★★★★★</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="companyList">
+                                <label>所属公司</label>
+                                <select name="companyid" class="form-control"></select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" id="saveCompanyBtn" class="btn btn-primary">保存</button>
+                    </div>
+                            </div>
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+                    <div class="modal fade" id="editModal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">编辑客户</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form id="saveCompanyForm">
-                                            <div class="form-group">
-                                                <label>类型</label>
-                                                <div>
-                                                    <label class="radio-inline">
-                                                        <input type="radio" name="type" value="person" checked
-                                                               id="radioPerson"> 个人
-                                                    </label>
-                                                    <label class="radio-inline">
-                                                        <input type="radio" name="type" value="company"
-                                                               id="radioCompany"> 公司
-                                                    </label>
-                                                </div>
-                                            </div>
+                                    <form id="editForm">
+                                        <input type="hidden" name="userid" id="edit_userid">
+                                        <input type="hidden" name="id" id="edit_id">
+                                        <input type="hidden" name="type" id="edit_type">
                                             <div class="form-group">
                                                 <label>名称</label>
-                                                <input type="text" class="form-control" name="name">
+                                                <input type="text" class="form-control" name="name" id="edit_name">
                                             </div>
                                             <div class="form-group">
                                                 <label>电话</label>
-                                                <input type="text" class="form-control" name="tel">
+                                                <input type="text" class="form-control" name="tel" id="edit_tel">
                                             </div>
                                             <div class="form-group">
                                                 <label>微信</label>
-                                                <input type="text" class="form-control" name="weixin">
+                                                <input type="text" class="form-control" name="weixin" id="edit_weixin">
                                             </div>
                                             <div class="form-group">
                                                 <label>邮箱</label>
-                                                <input type="text" class="form-control" name="email">
+                                                <input type="text" class="form-control" name="email" id="edit_email">
                                             </div>
                                             <div class="form-group">
                                                 <label>地址</label>
-                                                <input type="text" class="form-control" name="address">
+                                                <input type="text" class="form-control" name="address" id="edit_address">
                                             </div>
                                             <div class="form-group">
                                                 <label>等级</label>
-                                                <select name="level" class="form-control">
+                                                <select name="level" class="form-control" id="edit_level">
                                                     <option value=""></option>
                                                     <option value="★">★</option>
                                                     <option value="★★">★★</option>
@@ -131,7 +187,7 @@
                                                     <option value="★★★★★">★★★★★</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group" id="companyList">
+                                            <div class="form-group" id="editCompanyList">
                                                 <label>所属公司</label>
                                                 <select name="companyid" class="form-control"></select>
                                             </div>
@@ -139,7 +195,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                    <button type="button" id="saveCompanyBtn" class="btn btn-primary">保存</button>
+                                    <button type="button" id="editBtn" class="btn btn-primary">保存</button>
                                 </div>
                             </div>
                         </div><!-- /.modal-dialog -->
@@ -181,9 +237,9 @@
                 {
                     "data": function (row) {
                         if (row.companyname) {
-                            return row.name + " - " + row.companyname;
+                            return '<a href="/customer/'+row.id+'">'+row.name+'</a>' + " - " + '<a href="/customer/'+row.id+'">'+row.companyname+'</a>';
                         }
-                        return row.name;
+                        return '<a href="/customer/'+row.id+'">row.name</a>';
                     }
                 },
                 {"data": "tel"},
@@ -295,7 +351,83 @@
         });
         </shiro:hasRole>
 
+        //编辑
+        $("#editForm").validate({
+            errorClass:"text-danger",
+            errorElement:"span",
+            rules:{
+                name:{
+                    required:true
+                },
+                tel:{
+                    required:true
+                }
+            },
+            messages:{
+                name:{
+                    required:"请输入客户名称"
+                },
+                tel:{
+                    required:"请输入联系电话"
+                }
+            },
+            submitHandler:function(form){
+                $.post("/customer/edit",$(form).serialize()).done(function(data){
+                    if ("success"==data){
+                        $("#editModal").modal('hide');
+                        dateTable.ajax.reload();
+                    }
+                }).fail(function(){
+                    alert("服务器异常")
+                });
+            }
+        });
+        $(document).delegate(".editLink","click",function(){
+            var id = $(this).attr("rel");
+            var $select = $("#editCompanyList select");
+            $select.html("rel");
+            $select.append("<option></option>");
+            $.get("/customer/edit/"+id+".json").done(function(data){
+                if (data.state=="success"){
+                    if (data.companyList&&data.companyList.length){
+                        for(var i=0;i<data.companyList.length;i++){
+                            var company = data.companyList[i];
+                            var option = "<option value='"+company.id+"'>"+company.name+"</option>";
+                            $select.append(option);
+                        }
+                    }
+                    var customer = data.customer;
+                    if (customer.type=='company'){
+                        $("#editCompanyList").hide();
+                    }else {
+                        $("#editCompanyList").show();
+                    }
+                    $("#edit_id").val(customer.id);
+                    $("#edit_name").val(customer.name);
+                    $("#edit_tel").val(customer.tel);
+                    $("#edit_weixin").val(customer.weixin);
+                    $("#edit_address").val(customer.address);
+                    $("#edit_email").val(customer.email);
+                    $("#edit_level").val(customer.level);
+                    $("#edit_userid").val(customer.userid);
+                    $("#edit_type").val(customer.type);
+                    $select.val(customer.companyid);
+                    $("#editModal").modal({
+                        show:true,
+                        backdrop:'static',
+                        keyboard:false
+                    });
+                }else {
+                    alert(data.message)
+                }
+            }).fail(function(){
+                alert("服务器异常")
+            });
+        });
 
+        $("#editBtn").click(function(){
+            $("#editForm").submit();
+        });
     });
 </script>
 </body>

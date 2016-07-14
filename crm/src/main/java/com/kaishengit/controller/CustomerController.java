@@ -83,4 +83,25 @@ public class CustomerController {
         return customerService.findAllCompany();
     }
 
+    @RequestMapping(value = "/edit/{id:\\d+}.json",method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String,Object> editCustomer(@PathVariable Integer id){
+        Customer customer = customerService.findCustomerById(id);
+        Map<String,Object> result = Maps.newHashMap();
+        if (customer==null){
+            result.put("state","error");
+            result.put("message","找不到对应的用户");
+        }else {
+            List<Customer> companyList = customerService.findAllCompany();
+            result.put("state","success");
+            result.put("customer",customer);
+            result.put("companyList",companyList);
+        }
+        return result;
+    }
+
+    public String edit(Customer customer){
+        customerService.editCustomer(customer);
+        return "success";
+    }
 }

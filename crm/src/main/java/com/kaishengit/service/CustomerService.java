@@ -78,4 +78,27 @@ public class CustomerService {
             customerMapper.del(id);
         }
     }
+
+    public Customer findCustomerById(Integer id) {
+        return customerMapper.findById(id);
+    }
+
+    @Transactional
+    public void editCustomer(Customer customer) {
+        if (customer.getType().equals(Customer.CUSTOMER_TYPE_COMPANY)){
+            List<Customer> customerList = customerMapper.findByCompanyId(customer.getId());
+            for (Customer cust:customerList){
+                cust.setCompanyid(customer.getId());
+                cust.setCompanyname(customer.getName());
+                customerMapper.update(cust);
+            }
+        }else {
+            if (customer.getCompanyid()!=null){
+                Customer company = customerMapper.findById(customer.getId());
+                customer.setCompanyname(company.getName());
+            }
+        }
+        customer.setPinyin(Strings.toPinyin(customer.getName()));
+        customerMapper.update(customer);
+    }
 }
