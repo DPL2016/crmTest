@@ -124,4 +124,6 @@ public class Customer implements Serializable {
     public void setLevel(String level) {
         this.level = level;
     }
+
+
 }

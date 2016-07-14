@@ -5,6 +5,7 @@ import com.kaishengit.mapper.CustomerMapper;
 import com.kaishengit.pojo.Customer;
 import com.kaishengit.util.ShiroUtil;
 import com.kaishengit.util.Strings;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -43,6 +44,11 @@ public class CustomerService {
         return customerMapper.findByType(Customer.CUSTOMER_TYPE_COMPANY);
     }
 
+    /**
+     * 新增用户
+     * @param customer
+     */
+    @Transactional
     public void saveCustomer(Customer customer) {
         if (customer.getCompanyid()!=null){
             Customer company = customerMapper.findById(customer.getCompanyid());
@@ -51,5 +57,25 @@ public class CustomerService {
         customer.setUserid(ShiroUtil.getCurrentUserID());
         customer.setPinyin(Strings.toPinyin(customer.getName()));
         customerMapper.save(customer);
+    }
+
+    /**
+     * 根据id删除用户
+     * @param id
+     */
+    @Transactional
+    public void delCustom(Integer id) {
+        Customer customer = customerMapper.findById(id);
+        if (customer!=null){
+            if (customer.getType().equals(Customer.CUSTOMER_TYPE_COMPANY)){
+                List<Customer>customerList = customerMapper.findByCompanyId(id);
+                for (Customer cust : customerList){
+                    cust.setCompanyname(null);
+                    cust.setCompanyid(null);
+                    customerMapper.update(cust);
+                }
+            }
+            customerMapper.del(id);
+        }
     }
 }

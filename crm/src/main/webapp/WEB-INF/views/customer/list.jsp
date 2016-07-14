@@ -68,7 +68,7 @@
                                     <th>微信</th>
                                     <th>邮箱</th>
                                     <th>等级</th>
-
+                                    <th style="width: 80px">#</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -133,12 +133,7 @@
                                             </div>
                                             <div class="form-group" id="companyList">
                                                 <label>所属公司</label>
-                                                <select name="companyid" class="form-control">
-                                                    <option value=""></option>
-                                                    <c:forEach items="${companyList}" var="company">
-                                                        <option value="${company.id}">${company.name}</option>
-                                                    </c:forEach>
-                                                </select>
+                                                <select name="companyid" class="form-control"></select>
                                             </div>
                                     </form>
                                 </div>
@@ -197,6 +192,9 @@
                 {"data": "email"},
                 {"data": function(row){
                     return "<span style='color: gold'>"+row.level+"</span>";
+                }},
+                {"data":function(row){
+                    return "<a href='javascript:;' rel='"+row.id+"' class='editLink'>编辑</a>  "<shiro:hasRole name="经理"> + "<a href='javascript:;' rel='"+row.id+"' class='delLink'>删除</a>　"</shiro:hasRole>;
                 }}
             ],
             "language": {
@@ -248,6 +246,22 @@
         });
         $("#newCompany").click(function () {
             $("#saveCompanyForm")[0].reset();
+            //使用Ajax加载公司列表
+            $.get("/customer/company.json").done(function(data){
+                var $select = $("#companyList select");
+                $select.html("");
+                $select.append("<option></option>");
+                if (data&&data.length){
+                    for (var i=0;i<data.length;i++){
+                        var company = data[i];
+                        var option = "<option value='"+company.id+"'>"+company.name+"</option>";
+                        $select.append(option);
+                    }
+                }
+            }).fail(function(){
+                alert("服务器异常")
+            });
+            $("#companyList").show();
             $("#companyModal").modal({
                 show: true,
                 backdrop: 'static',
@@ -264,6 +278,23 @@
         $("#saveCompanyBtn").click(function () {
             $("#saveCompanyForm").submit();
         });
+
+        <shiro:hasRole name="经理">
+        //删除客户
+        $(document).delegate(".delLink","click",function(){
+            if (confirm("删除客户会自动删除关联数据，确定要删除吗？")){
+                var id = $(this).attr("rel");
+                $.get("/customer/del/"+id).done(function(data){
+                    if ("success"==data){
+                        dateTable.ajax.reload();
+                    }
+                }).fail(function(){
+                    alert("服务器异常")
+                });
+            }
+        });
+        </shiro:hasRole>
+
 
     });
 </script>

@@ -8,10 +8,7 @@ import com.kaishengit.util.ShiroUtil;
 import com.kaishengit.util.Strings;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -56,10 +53,34 @@ public class CustomerController {
         return new DataTablesResult<>(draw,customerList,count,filterCount);
     }
 
+    /**
+     * 新增客户
+     * @param customer
+     * @return
+     */
     @RequestMapping(value = "/new",method = RequestMethod.POST)
     @ResponseBody
     public String save(Customer customer){
         customerService.saveCustomer(customer);
         return "success";
     }
+
+    /**
+     * 根据id删除用户
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/del/{id:\\d+}",method = RequestMethod.GET)
+    @ResponseBody
+    public String del(@PathVariable Integer id){
+        customerService.delCustom(id);
+        return "success";
+    }
+
+    @RequestMapping(value = "/company.json",method = RequestMethod.GET)
+    @ResponseBody
+    public List<Customer> showAllCompanyJason(){
+        return customerService.findAllCompany();
+    }
+
 }
