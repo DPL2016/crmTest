@@ -55,6 +55,13 @@
                         ${customer.name}
                     </h3>
 
+                    <div class="box-tools">
+                        <c:if test="${not empty customer.userid}">
+                            <button class="btn btn-danger btn-xs" id="openCust">公开客户</button>
+                            <button class="btn btn-info btn-xs" id="moveCust">转移客户</button>
+                        </c:if>
+                    </div>
+
                 </div>
                 <div class="box-body">
                     <table class="table">
@@ -76,6 +83,16 @@
                             <tr>
                                 <td>所属公司</td>
                                 <td colspan="5"><a href="/customer/${customer.companyid}">${customer.companyname}</a> </td>
+                            </tr>
+                        </c:if>
+                        <c:if test="${not empty customerList}">
+                            <tr>
+                                <td>关联客户</td>
+                                <td colspan="5">
+                                    <c:forEach items="${customerList}" var="cust">
+                                        <a href="/customer/${cust.id}">${cust.name}</a>
+                                    </c:forEach>
+                                </td>
                             </tr>
                         </c:if>
                     </table>
@@ -104,18 +121,38 @@
                 </div>
             </div>
         </section>
-
-        <!-- Main content -->
-        <section class="content">
-
-            <!-- Your Page Content Here -->
-
-        </section>
-        <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
 </div>
 <!-- ./wrapper -->
+<div class="modal fade" id="moveModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">转移客户</h4>
+            </div>
+            <div class="modal-body">
+                <form id="moveForm" action="/customer/move" method="post">
+                    <input type="hidden" name="id" value="${customer.id}">
+                    <div class="form-group">
+                        <label>请选择转入员工姓名</label>
+                        <select name="userid" class="form-control">
+                            <c:forEach items="${userList}" var="user">
+                               <option value="${user.id}">${user.realname}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="moveBtn" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 <!-- REQUIRED JS SCRIPTS -->
 
@@ -126,6 +163,26 @@
 <!-- AdminLTE App -->
 <script src="/static/dist/js/app.min.js"></script>
 
+<script>
+    $(function(){
+        $("#openCust").click(function(){
+            if(confirm("确定要公开客户吗")) {
+                var id = ${customer.id};
+                window.location.href = "/customer/open/"+id;
+            }
+        });
+        $("#moveCust").click(function(){
+            $("#moveModal").modal({
+                show:true,
+                backdrop:'static',
+                keboard:false
+            });
+        });
+        $("#moveBtn").click(function(){
+            $("#moveForm").submit();
+        });
+    });
+</script>
 </body>
 </html>
 

@@ -83,6 +83,10 @@ public class CustomerService {
         return customerMapper.findById(id);
     }
 
+    /**
+     * 编辑用户
+     * @param customer
+     */
     @Transactional
     public void editCustomer(Customer customer) {
         if (customer.getType().equals(Customer.CUSTOMER_TYPE_COMPANY)){
@@ -99,6 +103,34 @@ public class CustomerService {
             }
         }
         customer.setPinyin(Strings.toPinyin(customer.getName()));
+        customerMapper.update(customer);
+    }
+
+    /**
+     * 根据公司id查找客户
+     * @param id
+     * @return
+     */
+    public List<Customer> findCustomerByCompanyId(Integer id) {
+        return customerMapper.findByCompanyId(id);
+    }
+
+    /**
+     * 公开客户
+     * @param customer
+     */
+    public void openCustomer(Customer customer) {
+        customer.setUserid(null);
+        customerMapper.update(customer);
+    }
+
+    /**
+     * 转移客户
+     * @param customer
+     * @param userid
+     */
+    public void moveCust(Customer customer, Integer userid) {
+        customer.setUserid(userid);
         customerMapper.update(customer);
     }
 }

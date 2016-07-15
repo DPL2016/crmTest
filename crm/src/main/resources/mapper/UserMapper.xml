@@ -61,4 +61,7 @@
     <select id="findById" resultType="User">
         SELECT * FROM t_user WHERE id = #{id}
     </select>
+    <select id="findAllUser" resultType="com.kaishengit.pojo.User">
+        SELECT * FROM t_user WHERE roleid IN (2,3)
+    </select>
 </mapper>

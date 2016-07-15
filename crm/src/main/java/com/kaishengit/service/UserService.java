@@ -108,4 +108,8 @@ public class UserService {
     public User findUserById(Integer id) {
         return userMapper.findById(id);
     }
+
+    public List<User> findAllUser() {
+        return userMapper.findAllUser();
+    }
 }
