@@ -94,7 +94,7 @@ public class CustomerService {
             }
         }else {
             if (customer.getCompanyid()!=null){
-                Customer company = customerMapper.findById(customer.getId());
+                Customer company = customerMapper.findById(customer.getCompanyid());
                 customer.setCompanyname(company.getName());
             }
         }

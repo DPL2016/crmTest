@@ -2,6 +2,8 @@ package com.kaishengit.controller;
 
 import com.google.common.collect.Maps;
 import com.kaishengit.dto.DataTablesResult;
+import com.kaishengit.exception.ForbiddenException;
+import com.kaishengit.exception.NotFoundException;
 import com.kaishengit.pojo.Customer;
 import com.kaishengit.service.CustomerService;
 import com.kaishengit.util.ShiroUtil;
@@ -100,8 +102,23 @@ public class CustomerController {
         return result;
     }
 
+    @RequestMapping(value = "/edit",method = RequestMethod.POST)
+    @ResponseBody
     public String edit(Customer customer){
         customerService.editCustomer(customer);
         return "success";
+    }
+
+    @RequestMapping(value = "/{id:\\d+}",method = RequestMethod.GET)
+    public String viewCustomer(@PathVariable Integer id,Model model){
+        Customer customer = customerService.findCustomerById(id);
+        if (customer==null){
+            throw new NotFoundException();
+        }
+        if (customer.getUserid()!=ShiroUtil.getCurrentUserID()&&!ShiroUtil.isManager()){
+            throw new ForbiddenException();
+        }
+        model.addAttribute("customer",customer);
+        return "customer/view";
     }
 }

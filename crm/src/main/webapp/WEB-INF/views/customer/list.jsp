@@ -239,7 +239,7 @@
                         if (row.companyname) {
                             return '<a href="/customer/'+row.id+'">'+row.name+'</a>' + " - " + '<a href="/customer/'+row.id+'">'+row.companyname+'</a>';
                         }
-                        return '<a href="/customer/'+row.id+'">row.name</a>';
+                        return '<a href="/customer/'+row.id+'">'+row.name+'</a>';
                     }
                 },
                 {"data": "tel"},
@@ -317,6 +317,7 @@
             }).fail(function(){
                 alert("服务器异常")
             });
+
             $("#companyList").show();
             $("#companyModal").modal({
                 show: true,
@@ -328,6 +329,12 @@
         $("#radioCompany").click(function () {
             if ($(this)[0].checked) {
                 $("#companyList").hide();
+            }
+        });
+
+        $("#radioPerson").click(function () {
+            if ($(this)[0].checked) {
+                $("#companyList").show();
             }
         });
 
