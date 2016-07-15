@@ -143,19 +143,19 @@ public class CustomerService {
     public String makeMeCard(Integer id) {
         Customer customer = customerMapper.findById(id);
         StringBuilder mecard = new StringBuilder("MECARD:");
-        if (StringUtils.isEmpty(customer.getName())){
+        if (StringUtils.isNotEmpty(customer.getName())){
             mecard.append("N:"+customer.getName()+";");
         }
-        if (StringUtils.isEmpty(customer.getTel())){
-            mecard.append("TEL:"+customer.getName()+";");
+        if (StringUtils.isNotEmpty(customer.getTel())){
+            mecard.append("TEL:"+customer.getTel()+";");
         }
-        if (StringUtils.isEmpty(customer.getEmail())){
+        if (StringUtils.isNotEmpty(customer.getEmail())){
             mecard.append("EMAIL:"+customer.getEmail()+";");
         }
-        if (StringUtils.isEmpty(customer.getAddress())){
+        if (StringUtils.isNotEmpty(customer.getAddress())){
             mecard.append("ADR:"+customer.getAddress()+";");
         }
-        if (StringUtils.isEmpty(customer.getCompanyname())){
+        if (StringUtils.isNotEmpty(customer.getCompanyname())){
             mecard.append("ORG:"+customer.getCompanyname()+";");
         }
         mecard.append(";");
