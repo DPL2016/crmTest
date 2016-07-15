@@ -43,10 +43,13 @@
                         <li class="active">所有用户</li>
                     </ol>
                     <h3 class="box-title">用户列表</h3>
-
                 </div>
+
                 <div class="box-body">
                     <table class="table" id="userTable">
+                        <div class="box-tools pull-right">
+                            <a href="javascript:;" id="newBtn" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> 新增</a>
+                        </div>
                         <thead>
                         <tr>
                             <th>用户名</th>
@@ -55,6 +58,7 @@
                             <th>角色</th>
                             <th>权限</th>
                             <th>创建时间</th>
+                            <th>#</th>
                         </tr>
                         </thead>
                         <tbody></tbody>
@@ -64,6 +68,48 @@
                 </div>
             </div>
         </section>
+        <div class="modal fade" id="newModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">新增用户</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="newForm">
+                            <div class="form-group">
+                                <label>账号(用于系统登录)</label>
+                                <input type="text" class="form-control" name="username">
+                            </div>
+                            <div class="form-group">
+                                <label>员工姓名(真实姓名)</label>
+                                <input type="text" class="form-control" name="realname">
+                            </div>
+                            <div class="form-group">
+                                <label>密码(默认 000000)</label>
+                                <input type="text" class="form-control" name="password" value="000000">
+                            </div>
+                            <div class="form-group">
+                                <label>微信号</label>
+                                <input type="text" class="form-control" name="weixin">
+                            </div>
+                            <div class="form-group">
+                                <label>角色</label>
+                                <select class="form-control" name="roleid">
+                                    <c:forEach items="${roleList}" var="role">
+                                        <option value="${role.id}">${role.rolename}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" id="saveBtn">保存</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
     </div>
 </div>
 <!-- jQuery 2.2.3 -->
@@ -75,6 +121,7 @@
 <script src="/static/plugins/datatables/js/jquery.dataTables.min.js"></script>
 <script src="/static/plugins/datatables/js/dataTables.bootstrap.min.js"></script>
 <script src="/static/plugins/moment/moment.min.js"></script>
+<script src="/static/plugins/jQuery/"
 <script>
     $(function () {
         var dataTable = $("#userTable").DataTable({
@@ -98,6 +145,9 @@
                 {"data": function(row){
                     var time = moment(row.createtime);
                     return time.format("YYYY-MM-DD HH:mm");
+                }},
+                {"data":function(row){
+                    return "<a class='label label-info' id='edit'>编辑</a>&nbsp;&nbsp;<a class='label label-danger' id='del'>重置密码</a>";
                 }}
             ],
             "language": {
@@ -114,6 +164,18 @@
                     "previous": "上一页"
                 }
             }
+        });
+
+        $("#newForm").validate({
+
+        });
+        $("#newBtn").click(function(){
+            $("#newForm")[0].reset();
+            $("#newModal").modal({
+                show:true,
+                backdrop:'static',
+                keyboard:false
+            });
         });
     });
 </script>
