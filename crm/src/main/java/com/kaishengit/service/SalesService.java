@@ -1,5 +1,6 @@
 package com.kaishengit.service;
 
+import com.google.common.collect.Maps;
 import com.kaishengit.mapper.CustomerMapper;
 import com.kaishengit.mapper.SalesMapper;
 import com.kaishengit.pojo.Customer;
@@ -24,9 +25,16 @@ public class SalesService {
     }
 
     public Long count() {
-        return salesMapper.count();
+        Map<String, Object> params = Maps.newHashMap();
+        if (ShiroUtil.isEmployee()){
+            params.put("userid",ShiroUtil.getCurrentUserID());
+        }
+        return salesMapper.countByparam(params);
     }
     public Long countByparam(Map<String, Object> params) {
+        if (ShiroUtil.isEmployee()){
+            params.put("userid",ShiroUtil.getCurrentUserID());
+        }
         return salesMapper.countByparam(params);
     }
 
@@ -40,6 +48,14 @@ public class SalesService {
     }
 
     public List<Sales> findSalesByParam(Map<String, Object> params) {
+        if (ShiroUtil.isEmployee()){
+            params.put("userid",ShiroUtil.getCurrentUserID());
+        }
         return salesMapper.findSalesByParam(params);
+    }
+
+    public Sales findSalesById(Integer id) {
+
+        return salesMapper.findSalesById(id);
     }
 }

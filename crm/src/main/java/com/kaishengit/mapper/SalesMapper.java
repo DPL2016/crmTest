@@ -8,10 +8,12 @@ import java.util.Map;
 public interface SalesMapper {
     List<Sales> findAll();
 
-    Long count();
+
     Long countByparam(Map<String, Object> params);
 
     void save(Sales sales);
 
     List<Sales> findSalesByParam(Map<String, Object> params);
+
+    Sales findSalesById(Integer id);
 }

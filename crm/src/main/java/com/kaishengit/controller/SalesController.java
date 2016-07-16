@@ -2,14 +2,18 @@ package com.kaishengit.controller;
 
 import com.google.common.collect.Maps;
 import com.kaishengit.dto.DataTablesResult;
+import com.kaishengit.exception.ForbiddenException;
+import com.kaishengit.exception.NotFoundException;
 import com.kaishengit.mapper.SalesMapper;
 import com.kaishengit.pojo.Customer;
 import com.kaishengit.pojo.Sales;
 import com.kaishengit.service.CustomerService;
 import com.kaishengit.service.SalesService;
+import com.kaishengit.util.ShiroUtil;
 import com.kaishengit.util.Strings;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -70,7 +74,7 @@ public class SalesController {
         params.put("progress",progress);
         params.put("startDate",startDate);
         params.put("endDate",endDate);
-        List<Sales> salesList = salesService.findAllSales();
+        List<Sales> salesList = salesService.findSalesByParam(params);
         Long count = salesService.count();
         Long filterCount = salesService.countByparam(params);
         return new DataTablesResult<>(draw,salesList,count,filterCount);
@@ -86,5 +90,18 @@ public class SalesController {
     public String saveSales(Sales sales){
         salesService.saveSales(sales);
         return "success";
+    }
+
+    @RequestMapping(value = "/{id:\\d+}",method = RequestMethod.GET)
+    public String showSales(@PathVariable Integer id,Model model){
+        Sales sales = salesService.findSalesById(id);
+        if (sales==null){
+            throw new NotFoundException();
+        }
+        if (!sales.getUsername().equals(ShiroUtil.getCurrentRealName())&&ShiroUtil.isManager()){
+            throw new ForbiddenException();
+        }
+        model.addAttribute("sales",sales);
+        return "sales/view";
     }
 }

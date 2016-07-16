@@ -14,29 +14,46 @@
     <select id="countByparam" resultType="java.lang.Long">
         SELECT COUNT(*) FROM t_sales
         <where>
+            <if test="userid!=null and userid!=''">
+                userid=#{userid}
+            </if>
             <if test="name!=null and name!=''">
                 name LIKE concat('%',#{name},'%')
             </if>
             <if test="progress!=null and progress!=''">
-                and name LIKE concat('%',#{progress},'%')
+                and progress = #{progress}
             </if>
             <if test="startDate!=null and startDate!=''">
-                and name LIKE concat('%',#{startDate},'%')
+                and date(lasttime) >= #{startdate}
             </if>
             <if test="endDate!=null and endDate!=''">
-                and name LIKE concat('%',#{endDate},'%')
+                and date(lasttime) &lt;= #{enddate}
             </if>
         </where>
     </select>
     <select id="findSalesByParam" resultType="com.kaishengit.pojo.Sales">
         SELECT * FROM t_sales
         <where>
-        <if test="name!=null and name!=''">
-            name LIKE concat('%',#{name},'%')
-        </if>
-        <if test="progress!=null and progress!=''">
-            and progress LIKE concat('%',#{progress},'%')
-        </if>
+            <if test="userid!=null and userid!=''">
+                userid=#{userid}
+            </if>
+            <if test="name!=null and name!=''">
+                name LIKE concat('%',#{name},'%')
+            </if>
+            <if test="progress!=null and progress!=''">
+                and progress = #{progress}
+            </if>
+            <if test="startDate!=null and startDate!=''">
+                and date(lasttime) >= #{startdate}
+            </if>
+            <if test="endDate!=null and endDate!=''">
+                and date(lasttime) &lt;= #{enddate}
+            </if>
         </where>
+        order by id desc
+        limit ${start},${length}
+    </select>
+    <select id="findSalesById" resultType="com.kaishengit.pojo.Sales">
+        SELECT * FROM t_sales WHERE id = #{id}
     </select>
 </mapper>
