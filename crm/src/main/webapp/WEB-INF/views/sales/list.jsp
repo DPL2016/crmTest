@@ -48,28 +48,47 @@
                             <div class="box-header with-border">
                                 <h3 class="box-title">搜索</h3>
                                 <div class="box-tools">
-                                    <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"><i class="fa fa-plus"></i></button>
+                                    <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"><i
+                                            class="fa fa-plus"></i></button>
                                 </div>
                             </div>
                             <div class="box-body" style="text-align: center">
-                                    <div class="row">
+                                <div class="row">
+                                    <form id="searchForm" method="get">
                                         <div class="col-xs-2">
-                                            <input type="text" class="form-control" placeholder="机会名称">
+                                            <input type="text" class="form-control" placeholder="机会名称" name="name" id="search_name">
                                         </div>
                                         <div class="col-xs-3">
-                                            <select class="form-control">
+                                            <select class="form-control" id="search_progress">
                                                 <option>当前进度</option>
+                                                <option>初次接触</option>
+                                                <option>确定意向</option>
+                                                <option>发送报价</option>
+                                                <option>提供合同</option>
+                                                <option>交易成功</option>
+                                                <option>交易搁置</option>
                                             </select>
                                         </div>
+                                        <div>
+                                            <%
+                                                String startDate = request.getParameter("startDate");
+                                                String endDate = request.getParameter("startDate");
+                                            %>
+                                            <input type="hidden" id="search_startDate" name="startDate" value="">
+                                            <input type="hidden" id="search_endDate" name="endDate">
+                                        </div>
                                         <div class="col-xs-5 ">
-                                            <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+                                            <div  id="reportrange" class="pull-right"
+                                                 style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
                                                 <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
                                                 <span>2016-7-15 ~ 2016-7-15</span> <b class="caret"></b>
                                             </div>
-
                                         </div>
-                                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i>搜索</button>
-                                    </div>
+                                        <button id="searchBtn" type="submit" class="btn btn-default"><i class="fa fa-search"></i>搜索
+                                        </button>
+                                    </form>
+                                </div>
+
                             </div>
                         </div>
                         <div class="box-header with-border">
@@ -121,13 +140,20 @@
                                             <label>价值</label>
                                             <input type="text" class="form-control" name="price">
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" id="custList">
                                             <label>关联客户</label>
-                                            <select name="custid" class="form-control" id="custList"></select>
+                                            <select name="custid" class="form-control"></select>
                                         </div>
                                         <div class="form-group">
                                             <label>当前进度</label>
-                                            <select name="progress" class="form-control" id="progressList"></select>
+                                            <select name="progress" class="form-control" id="progressList">
+                                                <option>初次接触</option>
+                                                <option>确定意向</option>
+                                                <option>发送报价</option>
+                                                <option>提供合同</option>
+                                                <option>交易成功</option>
+                                                <option>交易搁置</option>
+                                            </select>
                                         </div>
 
                                     </form>
@@ -150,9 +176,9 @@
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 <!-- AdminLTE App -->
 <script src="/static/dist/js/app.min.js"></script>
+<script src="/static/plugins/validate/jquery.validate.min.js"></script>
 <script src="/static/plugins/moment/moment.min.js"></script>
 <script src="/static/plugins/datatables/js/jquery.dataTables.min.js"></script>
-<script src="/static/plugins/validate/jquery.validate.min.js"></script>
 <script src="/static/plugins/datatables/js/dataTables.bootstrap.min.js"></script>
 <script src="/static/plugins/rangepicker/daterangepicker.js"></script>
 
@@ -160,17 +186,39 @@
     $(function () {
 
         var dateTable = $("#saleTable").DataTable({
-            searching:false,
+            searching: false,
             serverSide: true,
             "lengthChange": false,
-            ajax: "/sales/load",
+            ajax: {
+                url:"/sales/load",
+                data:function(dataSource){
+                    dataSource.name = $("#search_name").val();
+                    dataSource.progress = $("#search_progress").val();
+                    dataSource.startDate = $("#search_startDate").val();
+                    dataSource.endDate = $("#search_endDate").val();
+                }
+            },
             ordering: false,
             "autoWidth": false,
             columns: [
-                {"data": "name"},
-                {"data": "custname"},
+                {"data": function(row){
+                    return "<a href='/sales/"+row.id+"' rel='"+row.id+"'>"+row.name+"</a>";
+                }},
+                {"data": function(row){
+                    return "<a href='/customer/"+row.id+"' rel='"+row.custid+"'>"+row.custname+"</a>"
+                }},
                 {"data": "price"},
-                {"data": "progress"},
+                {"data": function(row){
+                    if (row.progress =='交易成功'){
+                        return "<span class='label label-success'>交易成功</span>"
+                    }
+                    if (row.progress =='交易搁置'){
+                        return "<span class='label label-danger'>交易搁置</span>"
+                    }
+                    return "<span>"+row.progress+"</span>";
+
+
+                }},
                 {"data": "lasttime"},
                 {"data": "username"}
             ],
@@ -191,7 +239,7 @@
             }
         });
 
-        $("#newSales").validate({
+        $("#salesForm").validate({
             errorClass: "text-danger",
             errorElement: "span",
             rules: {
@@ -206,7 +254,7 @@
                 name: {
                     required: "请输入机会名称"
                 },
-                tel: {
+                price: {
                     required: "请输入价格"
                 }
             },
@@ -221,10 +269,9 @@
                 });
             }
         });
-        /*$("#newSales").click(function () {
+        $("#newSales").click(function () {
             $("#salesForm")[0].reset();
-            //使用Ajax加载公司列表
-            $.get("/customer/customer.json").done(function (data) {
+            $.get("/sales/customer.json").done(function (data) {
                 var $select = $("#custList select");
                 $select.html("");
                 $select.append("<option></option>");
@@ -238,15 +285,15 @@
             }).fail(function () {
                 alert("服务器异常")
             });
-*/
-           $("#newSales").click(function(){
-               $("#newModal").modal({
-                   show: true,
-                   backdrop: 'static',
-                   keyboard: false
-               });
-           });
+        });
 
+        $("#newSales").click(function () {
+            $("#newModal").modal({
+                show: true,
+                backdrop: 'static',
+                keyboard: false
+            });
+        });
         $("#salesBtn").click(function () {
             $("#salesForm").submit();
         });
@@ -259,8 +306,8 @@
         }
 
         $('#reportrange').daterangepicker({
-            format:"YYYY-MM-DD",
-            separator:"~",
+            format: "YYYY-MM-DD",
+            separator: "~",
             startDate: start,
             endDate: end,
             ranges: {
@@ -271,23 +318,30 @@
                 '当月': [moment().startOf('month'), moment().endOf('month')],
                 '上个月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
             },
-            locale:{
-                applyLabel : '确定',
-                cancelLabel : '取消',
-                fromLabel : '起始时间',
-                toLabel : '结束时间',
-                customRangeLabel : '自定义',
-                weekLable:'周',
-                daysOfWeek : [ '日', '一', '二', '三', '四', '五', '六' ],
-                monthNames : [ '一月', '二月', '三月', '四月', '五月', '六月',
-                    '七月', '八月', '九月', '十月', '十一月', '十二月' ],
-                firstDay : 1
+            locale: {
+                applyLabel: '确定',
+                cancelLabel: '取消',
+                fromLabel: '起始时间',
+                toLabel: '结束时间',
+                customRangeLabel: '自定义',
+                weekLable: '周',
+                daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
+                monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
+                    '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                firstDay: 1
             }
         }, cb);
         cb(start, end);
-        $('#reportrange').on('apply.daterangepicker',function(ev,picker){
-            console.log(picker.startDate.format('YYYY-MM-DD'));
-            console.log(picker.endDate.format('YYYY-MM-DD'));
+        $('#reportrange').on('apply.daterangepicker', function (ev, picker) {
+            console.log(picker.startDate.format('YYYY-MM-DD HH:mm'));
+            console.log(picker.endDate.format('YYYY-MM-DD HH:mm'));
+            var startDate = picker.startDate.format('YYYY-MM-DD');
+            var endDate = picker.endDate.format('YYYY-MM-DD');
+            document.getElementById("search_startDate").value = startDate;
+            document.getElementById("search_endDate").value = endDate;
+        });
+        $("#searchBtn").click(function(){
+            dateTable.ajax.reload();
         });
     });
 </script>

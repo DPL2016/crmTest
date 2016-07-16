@@ -52,4 +52,11 @@
     <select id="findByCompanyId" resultType="Customer">
         SELECT * FROM t_customer WHERE companyid = #{id}
     </select>
+    <select id="findAll" resultType="com.kaishengit.pojo.Customer">
+        SELECT * FROM t_customer
+    </select>
+    <select id="findByCustomerId" resultType="com.kaishengit.pojo.Customer">
+        SELECT * FROM t_customer WHERE id = #{id}
+    </select>
+
 </mapper>
