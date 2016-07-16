@@ -161,4 +161,8 @@ public class CustomerService {
         mecard.append(";");
         return mecard.toString();
     }
+
+    public List<Customer> findAllCustomer() {
+        return customerMapper.findAll();
+    }
 }

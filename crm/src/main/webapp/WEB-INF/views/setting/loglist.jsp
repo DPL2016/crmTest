@@ -43,6 +43,7 @@
                     <h3 class="box-title">登录日志列表</h3>
 
                 </div>
+
                 <div class="box-body">
                     <table class="table" id="logTable">
                         <thead>
