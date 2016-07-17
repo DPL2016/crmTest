@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
@@ -58,15 +59,15 @@
                     <table class="table">
                         <tr>
                             <td style="width: 100px;">客户名称</td>
-                            <td style="width: 200px;">${sales.username}</td>
+                            <td style="width: 200px;"><a href="/customer/${sales.custid}" target="_blank">${sales.custname}</a></td>
                             <td style="width: 100px;">价值</td>
-                            <td style="width: 200px;">${sales.price}</td>
+                            <td style="width: 200px;">￥<fmt:formatNumber value="${sales.price}"/> </td>
                         </tr>
                         <tr>
                             <td style="width: 100px;">当前进度 </td>
                             <td style="width: 200px;">${sales.progress}&nbsp;<a href="javascript:;">修改</a></td>
                             <td style="width: 100px;">最后跟进时间</td>
-                            <td style="width: 200px;">${sales.lasttime}</td>
+                            <td style="width: 200px;">${empty sales.lasttime?'无':sales.lasttime}</td>
                         </tr>
 
                     </table>
@@ -80,37 +81,28 @@
                         </div>
                         <div class="box-body">
                             <ul class="timeline">
-                                <!-- timeline time label -->
-                                <li class="time-label">
-                                </li>
-                                <!-- /.timeline-label -->
-                                <!-- timeline item -->
+                                <c:forEach items="${salesLogList}" var="log">
                                 <li>
-                                    <i class="fa fa-envelope bg-blue"></i>
-
+                                    <c:choose>
+                                        <c:when test="${log.type=='auto'}">
+                                            <i class="fa fa-history bg-yellow"></i>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <i class="fa fa-commenting bg-aqua"></i>
+                                        </c:otherwise>
+                                    </c:choose>
                                     <div class="timeline-item">
-                                        <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-
-                                        <h3 class="timeline-header"><a href="#">Support Team</a> sent you an email</h3>
-
-                                        <div class="timeline-body">
-
-                                        </div>
-
+                                        <span class="time"><i class="fa fa-clock-o"></i><span class="timeago" rel="${log.createtime}"></span></span>
+                                        <h3 class="timeline-header no-border">
+                                            ${log.context}
+                                        </h3>
                                     </div>
                                 </li>
-                                <!-- END timeline item -->
-                                <!-- timeline item -->
-                                <li>
-                                    <i class="fa fa-user bg-aqua"></i>
+                                    <li>
+                                        <i class="fa fa-clock-o bg-gray"></i>
+                                    </li>
 
-                                    <div class="timeline-item">
-                                        <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span>
-
-                                        <h3 class="timeline-header no-border"><a href="#">Sarah Young</a> accepted your
-                                            friend request</h3>
-                                    </div>
-                                </li>
+                                </c:forEach>
                             </ul>
                         </div>
                     </div>
@@ -145,10 +137,12 @@
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 <!-- AdminLTE App -->
 <script src="/static/dist/js/app.min.js"></script>
+<script src="/static/plugins/moment/moment.min.js"></script>
 
 <script>
     $(function () {
-
+        moment.local("zh_cn");
+        $(".timeago").text(moment($(".timeago").attr('rel')).fromNow());
     });
 </script>
 </body>

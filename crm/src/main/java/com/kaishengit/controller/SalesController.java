@@ -7,6 +7,8 @@ import com.kaishengit.exception.NotFoundException;
 import com.kaishengit.mapper.SalesMapper;
 import com.kaishengit.pojo.Customer;
 import com.kaishengit.pojo.Sales;
+import com.kaishengit.pojo.SalesLog;
+import com.kaishengit.pojo.User;
 import com.kaishengit.service.CustomerService;
 import com.kaishengit.service.SalesService;
 import com.kaishengit.util.ShiroUtil;
@@ -103,6 +105,8 @@ public class SalesController {
             throw new ForbiddenException();
         }
         model.addAttribute("sales",sales);
+        List<SalesLog>salesLogList = salesService.findSalesBySalesId(id);
+       model.addAttribute(salesLogList);
         return "sales/view";
     }
 }

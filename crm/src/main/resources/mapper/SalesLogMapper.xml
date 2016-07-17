@@ -6,4 +6,7 @@
       INSERT INTO t_sales_log(context,type, salesid)
       VALUES (#{context},#{type},#{salesid})
     </insert>
+    <select id="findBySalesId" resultType="SalesLog">
+        SELECT *  FROM t_sales_log WHERE salesid=#{salesid} order by id desc
+    </select>
 </mapper>
