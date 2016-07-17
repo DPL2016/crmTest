@@ -80,4 +80,9 @@ public class SalesService {
     public List<SalesLog> findSalesBySalesId(Integer salesid) {
         return salesLogMapper.findBySalesId(salesid);
     }
+
+    public void saveLog(SalesLog salesLog) {
+        salesLog.setType(SalesLog.LOG_TYPE_INPUT);
+        salesLogMapper.save(salesLog);
+    }
 }

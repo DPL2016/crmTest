@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="/static/dist/css/AdminLTE.min.css">
 
     <link rel="stylesheet" href="/static/dist/css/skins/skin-blue.min.css">
+    <link rel="stylesheet" href="/static/plugins/simditor/styles/simditor.css">
     <![endif]-->
 </head>
 
@@ -50,7 +51,7 @@
 
                     <div class="box-tools">
                         <shiro:hasRole name="经理">
-                            <button class="btn btn-danger btn-xs" id="openCust">删除</button>
+                            <button class="btn btn-danger btn-xs" id="delSales">删除</button>
                         </shiro:hasRole>
                     </div>
 
@@ -78,7 +79,11 @@
                     <div class="box box-info">
                         <div class="box-header with-border">
                             <h3 class="box-title">跟进记录</h3>
+                            <div class="box-tools">
+                                <button class="btn btn-xs btn-success" id="newLogBtn"><i  class="fa fa-plus"></i>新增记录</button>
+                            </div>
                         </div>
+
                         <div class="box-body">
                             <ul class="timeline">
                                 <c:forEach items="${salesLogList}" var="log">
@@ -92,7 +97,7 @@
                                         </c:otherwise>
                                     </c:choose>
                                     <div class="timeline-item">
-                                        <span class="time"><i class="fa fa-clock-o"></i><span class="timeago" rel="${log.createtime}"></span></span>
+                                        <span class="time"><i class="fa fa-clock-o"></i><span class="timeago" title="${log.createtime}"></span></span>
                                         <h3 class="timeline-header no-border">
                                             ${log.context}
                                         </h3>
@@ -129,6 +134,28 @@
         </section>
     </div>
     <!-- /.content-wrapper -->
+    <div class="modal fade" id="newLogModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">新增跟进</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="newLogForm" action="/sales/log/new" method="post">
+                        <input type="hidden" name="salesid" value="${sales.id}">
+                        <div class="form-group">
+                            <textarea name="context" id="context"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="saveLogBtn">保存</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 </div>
 
 <!-- jQuery 2.2.3 -->
@@ -137,12 +164,35 @@
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 <!-- AdminLTE App -->
 <script src="/static/dist/js/app.min.js"></script>
-<script src="/static/plugins/moment/moment.min.js"></script>
-
+<script src="/static/plugins/timeago/timeago.js"></script>
+<script src="/static/plugins/timeago/timeago_zh_cn.js"></script>
+<script src="/static/plugins/simditor/scripts/module.min.js"></script>
+<script src="/static/plugins/simditor/scripts/hotkeys.min.js"></script>
+<script src="/static/plugins/simditor/scripts/uploader.min.js"></script>
+<script src="/static/plugins/simditor/scripts/simditor.js"></script>
 <script>
     $(function () {
-        moment.local("zh_cn");
-        $(".timeago").text(moment($(".timeago").attr('rel')).fromNow());
+
+        $(".timeago").timeago();
+        var edit = new Simditor({
+            textarea:$("#context"),
+            placeholder:'请输入跟进内容',
+            toolbar:false
+        });
+
+        $("#newLogBtn").click(function(){
+            $("#newLogModal").modal({
+                show:true,
+                backdrop:'static'
+            });
+        });
+        $("#saveLogBtn").click(function(){
+            if (edit.getValue()){
+                $("#newLogForm").submit();
+            }else {
+                edit.focus();
+            }
+        });
     });
 </script>
 </body>

@@ -95,6 +95,12 @@ public class SalesController {
         return "success";
     }
 
+    /**
+     * 机会详细信息页面
+     * @param id
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/{id:\\d+}",method = RequestMethod.GET)
     public String showSales(@PathVariable Integer id,Model model){
         Sales sales = salesService.findSalesById(id);
@@ -108,5 +114,11 @@ public class SalesController {
         List<SalesLog>salesLogList = salesService.findSalesBySalesId(id);
        model.addAttribute(salesLogList);
         return "sales/view";
+    }
+
+    @RequestMapping(value = "/log/new",method = RequestMethod.POST)
+    public String saveLog(SalesLog salesLog){
+        salesService.saveLog(salesLog);
+        return "redirect:/sales/"+salesLog.getSalesid();
     }
 }
