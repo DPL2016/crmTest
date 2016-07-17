@@ -4,8 +4,10 @@ import java.sql.Timestamp;
 
 public class SalesLog implements Serializable{
     private static final long serialVersionUID = 5494522076452437145L;
+    public static final String LOG_TYPE_AUTO = "auto";
+    public static final String LOG_TYPE_INPUT = "input";
     private Integer id;
-    private Long context;
+    private String context;
     private Timestamp createtime;
     private String type;
     private Integer salesid;
@@ -18,11 +20,11 @@ public class SalesLog implements Serializable{
         this.id = id;
     }
 
-    public Long getContext() {
+    public String getContext() {
         return context;
     }
 
-    public void setContext(Long context) {
+    public void setContext(String context) {
         this.context = context;
     }
 

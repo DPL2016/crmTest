@@ -2,11 +2,15 @@ package com.kaishengit.service;
 
 import com.google.common.collect.Maps;
 import com.kaishengit.mapper.CustomerMapper;
+import com.kaishengit.mapper.SalesFileMapper;
+import com.kaishengit.mapper.SalesLogMapper;
 import com.kaishengit.mapper.SalesMapper;
 import com.kaishengit.pojo.Customer;
 import com.kaishengit.pojo.Sales;
+import com.kaishengit.pojo.SalesLog;
 import com.kaishengit.util.ShiroUtil;
 import org.joda.time.DateTime;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -19,6 +23,10 @@ public class SalesService {
     private SalesMapper salesMapper;
     @Inject
     private CustomerMapper customerMapper;
+    @Inject
+    private SalesLogMapper salesLogMapper;
+    @Inject
+    private SalesFileMapper salesFileMapper;
 
     public List<Sales> findAllSales() {
         return salesMapper.findAll();
@@ -38,6 +46,7 @@ public class SalesService {
         return salesMapper.countByparam(params);
     }
 
+    @Transactional
     public void saveSales(Sales sales) {
         Customer customer = customerMapper.findByCustomerId(sales.getCustid());
         sales.setCustname(customer.getName());
@@ -45,6 +54,11 @@ public class SalesService {
         sales.setUserid(ShiroUtil.getCurrentUserID());
         sales.setUsername(ShiroUtil.getCurrentRealName());
         salesMapper.save(sales);
+        SalesLog salesLog = new SalesLog();
+        salesLog.setType(SalesLog.LOG_TYPE_AUTO);
+        salesLog.setContext(ShiroUtil.getCurrentRealName()+ " 创建了该销售机会");
+        salesLog.setSalesid(sales.getId());
+        salesLogMapper.save(salesLog);
     }
 
     public List<Sales> findSalesByParam(Map<String, Object> params) {

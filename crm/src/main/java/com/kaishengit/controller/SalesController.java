@@ -36,7 +36,8 @@ public class SalesController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET)
-    public String list(){
+    public String list(Model model){
+        model.addAttribute("customerList",customerService.findAllCustomer());
         return "sales/list";
     }
 
