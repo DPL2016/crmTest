@@ -5,6 +5,10 @@
         INSERT INTO t_sales(name, price, custid, custname, progress, lasttime, userid, username)
         VALUES(#{name},#{price},#{custid},#{custname},#{progress},#{lasttime},#{userid},#{username});
     </insert>
+    <update id="update">
+        UPDATE t_sales SET lasttime = #{lasttime},successtime=#{successtime},progress=#{progress}
+         where id = #{id}
+    </update>
     <select id="findAll" resultType="Sales">
         SELECT * FROM t_sales
     </select>

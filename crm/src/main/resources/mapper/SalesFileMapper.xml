@@ -2,4 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.kaishengit.mapper.SalesFileMapper">
 <cache/>
+    <select id="findSalesFileBySalesId" resultType="SalesFile">
+        SELECT * FROM t_sales_file WHERE salesid = #{salesid}
+    </select>
+    <insert id="save">
+        INSERT INTO t_sales_file(name, filename, contenttype,`size`, salesid)
+        VALUES (#{name},#{filename},#{contenttype},#{size},#{salesid})
+    </insert>
 </mapper>

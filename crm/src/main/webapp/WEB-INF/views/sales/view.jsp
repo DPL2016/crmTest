@@ -23,6 +23,7 @@
 
     <link rel="stylesheet" href="/static/dist/css/skins/skin-blue.min.css">
     <link rel="stylesheet" href="/static/plugins/simditor/styles/simditor.css">
+    <link rel="stylesheet" href="/static/plugins/webuploader/webuploader.css">
     <![endif]-->
 </head>
 
@@ -60,13 +61,15 @@
                     <table class="table">
                         <tr>
                             <td style="width: 100px;">客户名称</td>
-                            <td style="width: 200px;"><a href="/customer/${sales.custid}" target="_blank">${sales.custname}</a></td>
+                            <td style="width: 200px;"><a href="/customer/${sales.custid}"
+                                                         target="_blank">${sales.custname}</a></td>
                             <td style="width: 100px;">价值</td>
-                            <td style="width: 200px;">￥<fmt:formatNumber value="${sales.price}"/> </td>
+                            <td style="width: 200px;">￥<fmt:formatNumber value="${sales.price}"/></td>
                         </tr>
                         <tr>
-                            <td style="width: 100px;">当前进度 </td>
-                            <td style="width: 200px;">${sales.progress}&nbsp;<a href="javascript:;">修改</a></td>
+                            <td style="width: 100px;">当前进度</td>
+                            <td style="width: 200px;">${sales.progress}&nbsp;<a href="javascript:;"
+                                                                                id="editProgress">修改</a></td>
                             <td style="width: 100px;">最后跟进时间</td>
                             <td style="width: 200px;">${empty sales.lasttime?'无':sales.lasttime}</td>
                         </tr>
@@ -80,33 +83,31 @@
                         <div class="box-header with-border">
                             <h3 class="box-title">跟进记录</h3>
                             <div class="box-tools">
-                                <button class="btn btn-xs btn-success" id="newLogBtn"><i  class="fa fa-plus"></i>新增记录</button>
+                                <button class="btn btn-xs btn-success" id="newLogBtn"><i class="fa fa-plus"></i>新增记录
+                                </button>
                             </div>
                         </div>
 
                         <div class="box-body">
                             <ul class="timeline">
                                 <c:forEach items="${salesLogList}" var="log">
-                                <li>
-                                    <c:choose>
-                                        <c:when test="${log.type=='auto'}">
-                                            <i class="fa fa-history bg-yellow"></i>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <i class="fa fa-commenting bg-aqua"></i>
-                                        </c:otherwise>
-                                    </c:choose>
-                                    <div class="timeline-item">
-                                        <span class="time"><i class="fa fa-clock-o"></i><span class="timeago" title="${log.createtime}"></span></span>
-                                        <h3 class="timeline-header no-border">
-                                            ${log.context}
-                                        </h3>
-                                    </div>
-                                </li>
                                     <li>
-                                        <i class="fa fa-clock-o bg-gray"></i>
+                                        <c:choose>
+                                            <c:when test="${log.type=='auto'}">
+                                                <i class="fa fa-history bg-yellow"></i>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <i class="fa fa-commenting bg-aqua"></i>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <div class="timeline-item">
+                                            <span class="time"><i class="fa fa-clock-o"></i><span class="timeago"
+                                                                                                  title="${log.createtime}"></span></span>
+                                            <h3 class="timeline-header no-border">
+                                                    ${log.context}
+                                            </h3>
+                                        </div>
                                     </li>
-
                                 </c:forEach>
                             </ul>
                         </div>
@@ -116,9 +117,20 @@
                     <div class="box box-default">
                         <div class="box-header with-border">
                             <h3 class="box-title"><i class="fa  fa-folder-o"></i>相关资料</h3>
+                            <div class="box-tools">
+                                <div id="uploadBtn"><span class="text"><i class="fa fa-upload"></i></span></div>
+                            </div>
                         </div>
-                        <div class="box-body" style="text-align: center">
 
+                        <div class="box-body" style="text-align: center">
+                            <ul class="list-unstyled files">
+                                <c:if test="${empty salesFileList}">
+                                    <li>暂无资料</li>
+                                </c:if>
+                                <c:forEach items="${salesFileList}" var="file">
+                                    <li style="text-align: left"><a href="/sales/file/${file.id}/download">${file.name}</a></li>
+                                </c:forEach>
+                            </ul>
                         </div>
                     </div>
                     <div class="box box-default">
@@ -138,7 +150,8 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">新增跟进</h4>
                 </div>
                 <div class="modal-body">
@@ -152,6 +165,36 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                     <button type="button" class="btn btn-primary" id="saveLogBtn">保存</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <div class="modal fade" id="progressModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">新增跟进</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="progressForm" action="/sales/progress/edit" method="post">
+                        <input type="hidden" name="id" value="${sales.id}">
+                        <div class="form-group">
+                            <label>当前进度</label>
+                            <select name="progress" class="form-control">
+                                <option value="初次接触">初次接触</option>
+                                <option value="确定意向">确定意向</option>
+                                <option value="提供合同">提供合同</option>
+                                <option value="交易完成">交易完成</option>
+                                <option value="交易搁置">交易搁置</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="saveProgress">保存</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -170,28 +213,61 @@
 <script src="/static/plugins/simditor/scripts/hotkeys.min.js"></script>
 <script src="/static/plugins/simditor/scripts/uploader.min.js"></script>
 <script src="/static/plugins/simditor/scripts/simditor.js"></script>
+<script src="/static/plugins/webuploader/webuploader.min.js"></script>
 <script>
     $(function () {
 
         $(".timeago").timeago();
         var edit = new Simditor({
-            textarea:$("#context"),
-            placeholder:'请输入跟进内容',
-            toolbar:false
+            textarea: $("#context"),
+            placeholder: '请输入跟进内容',
+            toolbar: false
         });
 
-        $("#newLogBtn").click(function(){
+        $("#newLogBtn").click(function () {
             $("#newLogModal").modal({
-                show:true,
-                backdrop:'static'
+                show: true,
+                backdrop: 'static'
             });
         });
-        $("#saveLogBtn").click(function(){
-            if (edit.getValue()){
+        $("#saveLogBtn").click(function () {
+            if (edit.getValue()) {
                 $("#newLogForm").submit();
-            }else {
+            } else {
                 edit.focus();
             }
+        });
+        $("#editProgress").click(function () {
+            $("#progressModal").modal({
+                show: true,
+                backdrop: 'static'
+            });
+        });
+        $("#saveProgress").click(function () {
+            $("#progressForm").submit();
+        });
+
+        var upload = WebUploader.create({
+            swf:"/static/plugins/webuploader/Uploader.swf",
+            pick:"#uploadBtn",
+            server:"/sales/file/upload",
+            fileVal:"file",
+            formData:{"salesid":"${sales.id}"},
+            auto:true
+        });
+        upload.on("startUpload",function(){
+            $("#uploadBtn .text").html('<i class="fa fa-spinner fa-spin"></i>');
+        });
+        upload.on("uploadSuccess",function(file,data){
+            if (data._raw=="success"){
+                window.history.go(0);
+            }
+        });
+        upload.on("uploadError",function(file){
+            alert("文件上传失败")
+        });
+        upload.on("updateComplete",function(file){
+            $("#uploadBtn .text").html('<i class="fa fa-upload"></i>').removeAttr("disabled");
         });
     });
 </script>

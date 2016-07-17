@@ -5,23 +5,23 @@ import com.kaishengit.dto.DataTablesResult;
 import com.kaishengit.exception.ForbiddenException;
 import com.kaishengit.exception.NotFoundException;
 import com.kaishengit.mapper.SalesMapper;
-import com.kaishengit.pojo.Customer;
-import com.kaishengit.pojo.Sales;
-import com.kaishengit.pojo.SalesLog;
-import com.kaishengit.pojo.User;
+import com.kaishengit.pojo.*;
 import com.kaishengit.service.CustomerService;
 import com.kaishengit.service.SalesService;
 import com.kaishengit.util.ShiroUtil;
 import com.kaishengit.util.Strings;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +33,8 @@ public class SalesController {
     @Inject
     private SalesService salesService;
 
+    @Value("${imagePath}")
+    private String savePath;
     /**
      * 显示机会页面
      * @return
@@ -41,16 +43,6 @@ public class SalesController {
     public String list(Model model){
         model.addAttribute("customerList",customerService.findAllCustomer());
         return "sales/list";
-    }
-
-    /**
-     * 发送客户列表
-     * @return
-     */
-    @RequestMapping(value = "/customer.json",method = RequestMethod.GET)
-    @ResponseBody
-    public List<Customer> showAllCustomer(){
-        return customerService.findAllCustomer();
     }
 
     /**
@@ -112,13 +104,46 @@ public class SalesController {
         }
         model.addAttribute("sales",sales);
         List<SalesLog>salesLogList = salesService.findSalesBySalesId(id);
-       model.addAttribute(salesLogList);
+        model.addAttribute(salesLogList);
+        List<SalesFile>salesFileList = salesService.findSalesFileBySalesId(id);
+        model.addAttribute(salesFileList);
         return "sales/view";
     }
 
+    /**
+     * 进度的添加
+     * @param salesLog
+     * @return
+     */
     @RequestMapping(value = "/log/new",method = RequestMethod.POST)
     public String saveLog(SalesLog salesLog){
         salesService.saveLog(salesLog);
         return "redirect:/sales/"+salesLog.getSalesid();
+    }
+
+    /**
+     * 修改机会进度
+     * @param id
+     * @param progress
+     * @return
+     */
+    @RequestMapping(value = "/progress/edit",method = RequestMethod.POST)
+    public String editProgress(Integer id,String progress){
+        salesService.editSaleProgress(id,progress);
+        return "redirect:/sales/"+id;
+    }
+
+    /**
+     * 文件上传
+     * @param file
+     * @param salesid
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "/file/upload",method = RequestMethod.POST)
+    @ResponseBody
+    public String uoload(MultipartFile file,Integer salesid) throws IOException {
+        salesService.uploadFile(file.getInputStream(),file.getOriginalFilename(),file.getContentType(),file.getSize(),salesid);
+        return "success";
     }
 }
