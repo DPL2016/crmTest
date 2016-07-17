@@ -5,6 +5,9 @@
     <select id="findSalesFileBySalesId" resultType="SalesFile">
         SELECT * FROM t_sales_file WHERE salesid = #{salesid}
     </select>
+    <select id="findSalesFileById" resultType="com.kaishengit.pojo.SalesFile">
+        SELECT * FROM t_sales_file WHERE id = #{id}
+    </select>
     <insert id="save">
         INSERT INTO t_sales_file(name, filename, contenttype,`size`, salesid)
         VALUES (#{name},#{filename},#{contenttype},#{size},#{salesid})

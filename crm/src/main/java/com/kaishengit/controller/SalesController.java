@@ -11,6 +11,9 @@ import com.kaishengit.service.SalesService;
 import com.kaishengit.util.ShiroUtil;
 import com.kaishengit.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
@@ -145,5 +148,31 @@ public class SalesController {
     public String uoload(MultipartFile file,Integer salesid) throws IOException {
         salesService.uploadFile(file.getInputStream(),file.getOriginalFilename(),file.getContentType(),file.getSize(),salesid);
         return "success";
+    }
+
+    /**
+     * 文件下载
+     * @param id
+     * @return
+     * @throws FileNotFoundException
+     * @throws UnsupportedEncodingException
+     */
+    @RequestMapping(value = "/file/{id:\\d+}/download",method = RequestMethod.GET)
+    public ResponseEntity<InputStreamResource> update(@PathVariable Integer id) throws FileNotFoundException, UnsupportedEncodingException {
+        SalesFile salesFile = salesService.findSalesFileById(id);
+        if (salesFile==null){
+            throw new NotFoundException();
+        }
+        File file  = new File(savePath,salesFile.getFilename());
+        if (!file.exists()){
+            throw new NotFoundException();
+        }
+        FileInputStream inputStream  = new FileInputStream(file);
+        String fileName = salesFile.getName();
+        fileName = new String(fileName.getBytes("UTF-8"),"ISO8859-1");
+        return ResponseEntity.ok().contentLength(salesFile.getSize())
+                .contentType(MediaType.parseMediaType(salesFile.getContenttype()))
+                .header("Content-Disposition","attachment;filename=\""+fileName+"\"")
+                .body(new InputStreamResource(inputStream));
     }
 }

@@ -247,7 +247,7 @@
             $("#progressForm").submit();
         });
 
-        var upload = WebUploader.create({
+        var uploader = WebUploader.create({
             swf:"/static/plugins/webuploader/Uploader.swf",
             pick:"#uploadBtn",
             server:"/sales/file/upload",
@@ -255,10 +255,10 @@
             formData:{"salesid":"${sales.id}"},
             auto:true
         });
-        upload.on("startUpload",function(){
+        uploader.on("startUpload",function(){
             $("#uploadBtn .text").html('<i class="fa fa-spinner fa-spin"></i>');
         });
-        upload.on("uploadSuccess",function(file,data){
+        uploader.on("uploadSuccess",function(file,data){
             if (data._raw=="success"){
                 window.history.go(0);
             }

@@ -124,7 +124,7 @@ public class SalesService {
             newName += originalFilename.substring(originalFilename.lastIndexOf("."));
         }
         try {
-            FileOutputStream outputStream = new FileOutputStream(new File(savePath));
+            FileOutputStream outputStream = new FileOutputStream(new File(savePath,newName));
             IOUtils.copy(inputStream,outputStream);
             outputStream.flush();
             outputStream.close();
@@ -139,5 +139,9 @@ public class SalesService {
         salesFile.setName(originalFilename);
         salesFile.setSize(size);
         salesFileMapper.save(salesFile);
+    }
+
+    public SalesFile findSalesFileById(Integer id) {
+        return salesFileMapper.findSalesFileById(id);
     }
 }

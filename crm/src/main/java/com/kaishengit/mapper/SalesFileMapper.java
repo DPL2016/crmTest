@@ -8,4 +8,6 @@ public interface SalesFileMapper {
     List<SalesFile> findSalesFileBySalesId(Integer salesid);
 
     void save(SalesFile salesFile);
+
+    SalesFile findSalesFileById(Integer id);
 }
