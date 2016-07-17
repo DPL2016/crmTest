@@ -175,4 +175,9 @@ public class SalesController {
                 .header("Content-Disposition","attachment;filename=\""+fileName+"\"")
                 .body(new InputStreamResource(inputStream));
     }
+    @RequestMapping(value = "/del/{id:\\d+}",method = RequestMethod.GET)
+    public String delSales(@PathVariable Integer id){
+        salesService.delSales(id);
+        return "redirect:/sales";
+    }
 }

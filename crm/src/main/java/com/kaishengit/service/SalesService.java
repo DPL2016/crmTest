@@ -144,4 +144,20 @@ public class SalesService {
     public SalesFile findSalesFileById(Integer id) {
         return salesFileMapper.findSalesFileById(id);
     }
+
+    @Transactional
+    public void delSales(Integer id) {
+        Sales sales = salesMapper.findSalesById(id);
+        if (sales!=null){
+            List<SalesFile> salesFileList = salesFileMapper.findSalesFileBySalesId(id);
+            if (!salesFileList.isEmpty()){
+                salesFileMapper.del(salesFileList);
+            }
+            List<SalesLog> salesLogList = salesLogMapper.findBySalesId(id);
+            if (!salesLogList.isEmpty()){
+                salesLogMapper.del(salesLogList);
+            }
+            salesMapper.del(id);
+        }
+    }
 }

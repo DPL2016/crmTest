@@ -263,12 +263,19 @@
                 window.history.go(0);
             }
         });
-        upload.on("uploadError",function(file){
+        uploader.on("uploadError",function(file){
             alert("文件上传失败")
         });
-        upload.on("updateComplete",function(file){
+        uploader.on("updateComplete",function(file){
             $("#uploadBtn .text").html('<i class="fa fa-upload"></i>').removeAttr("disabled");
         });
+        <shiro:hasRole name="经理">
+        $("#delSales").click(function(){
+            if (confirm("确认要删除吗？")){
+                window.location.href="/sales/del/${sales.id}"
+            }
+        });
+        </shiro:hasRole>
     });
 </script>
 </body>

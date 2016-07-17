@@ -10,4 +10,6 @@ public interface SalesFileMapper {
     void save(SalesFile salesFile);
 
     SalesFile findSalesFileById(Integer id);
+
+    void del(List<SalesFile> salesFileList);
 }

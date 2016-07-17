@@ -20,4 +20,6 @@ public interface SalesMapper {
     List<Sales> findSalesByCustId(Integer custid);
 
     void update(Sales sales);
+
+    void del(Integer id);
 }
