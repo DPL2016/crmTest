@@ -16,4 +16,10 @@ public interface SalesMapper {
     List<Sales> findSalesByParam(Map<String, Object> params);
 
     Sales findSalesById(Integer id);
+
+    List<Sales> findSalesByCustId(Integer custid);
+
+    void update(Sales sales);
+
+    void del(Integer id);
 }
