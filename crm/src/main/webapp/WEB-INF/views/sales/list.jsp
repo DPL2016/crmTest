@@ -22,7 +22,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="/static/plugins/rangepicker/daterangepicker.css">
     <link rel="stylesheet" href="/static/plugins/datatables/css/dataTables.bootstrap.min.css">
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini" style="background-image: url(/static/dist/img/asanoha-400px.png)">
 <div class="wrapper">
 
     <%@include file="../include/header.jsp"%>
@@ -291,6 +291,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     if(data == "success") {
                         $("#newModal").modal('hide');
                     }
+                    dataTable.ajax.reload();
                 }).fail(function(){
                     alert("服务器异常");
                 });
