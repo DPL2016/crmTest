@@ -58,10 +58,21 @@
                 <div class="col-md-4">
                     <div class="box box-default">
                         <div class="box-header with-border">
-                            <h3 class="box-title"><i class="fa fa-calendar-check-o"></i>待办事项</h3>
+                            <h3 class="box-title"><i class="fa fa-calendar-check-o"></i>已经延期的事项</h3>
                         </div>
                         <div class="box-body">
-                            <h5>暂无代办事项</h5>
+                            <ul class="todo-list">
+                                <c:forEach items="${timeoutTaskList}" var="task">
+                                    <li>
+                                        <input type="checkbox">
+                                        <span class="text">${task.title}</span>
+                                        <div class="tools">
+                                            <i class="fa fa-trash-o"></i>
+                                        </div>
+                                    </li>
+                                </c:forEach>
+
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -257,7 +268,6 @@
             }
             $.post("/task/new",$("#newTaskForm").serialize()).done(function(result){
                 if(result.state == "success") {
-                    //将返回的日程，渲染到日历控件上
                     $calendar.fullCalendar( 'renderEvent', result.data );
                     $("#newTaskModal").modal('hide');
                 }
@@ -266,6 +276,34 @@
             });
         });
 
+        //删除日程
+        $("#delBtn").click(function(){
+            var id  = $("#event_id").val();
+            if (confirm("确认要删除吗？")){
+                $.get("/task/del"+id).done(function(data){
+                    if ("success"==data){
+                        $calendar.fullCalendar('removeEvents',id);
+                        $("#eventTaskModal").modal('hide');
+                    }
+                }).fail(function(){
+                    alert("服务器异常");
+                });
+            }
+        });
+
+        //将日程标记为已完成
+        $("#doneBtn").click(function(){
+            var id  = $("#event_id").val();
+            $.post("/task/"+id+"/done").done(function(result){
+                if (result.state=="success"){
+                    _event.color="#cccccc";
+                    $calendar.fullCalendar('updateEvent',_event);
+                    $("#eventTaskModal").modal('hide');
+                }
+            }).fail(function(){
+                alert("服务器异常")
+            });
+        });
     });
 </script>
 </body>
