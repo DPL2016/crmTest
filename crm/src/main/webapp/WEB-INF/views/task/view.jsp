@@ -89,7 +89,7 @@
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
                                 </div>
-                                <input type="text" class="form-control pull-right" id="startDate">
+                                <input type="text" class="form-control pull-right" name="start" id="startDate">
                             </div>
                         </div>
                         <div class="form-group">
@@ -98,13 +98,13 @@
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
                                 </div>
-                                <input type="text" class="form-control pull-right" id="endDate">
+                                <input type="text" class="form-control pull-right" name="end" id="endDate">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>提醒时间</label>
                             <div>
-                                <select>
+                                <select name="hour" style="width: 100px">
                                     <option></option>
                                     <option>1</option>
                                     <option>2</option>
@@ -119,7 +119,7 @@
                                     <option>11</option>
                                     <option>0</option>
                                 </select> :
-                                <select>
+                                <select name="min" style="width: 100px">
                                     <option></option>
                                     <option>05</option>
                                     <option>10</option>
@@ -138,7 +138,7 @@
                         </div>
                         <div class="form-group">
                             <label>显示颜色</label>
-                            <input type="text" class="form-control my-colorpicker1 colorpicker-element" id="color">
+                            <input type="text" class="form-control my-colorpicker1 colorpicker-element" name="color" id="color">
                         </div>
                     </form>
                 </div>
@@ -159,23 +159,18 @@
                 </div>
                 <div class="modal-body">
                     <form id="eventTaskForm">
+                        <input type="hidden" id="event_id">
                         <div class="form-group">
                             <label>待办内容</label>
-                            <div>
-
-                            </div>
+                            <div id="event_title"></div>
                         </div>
                         <div class="form-group">
-                            <label>开始时间 ~ 结束时间</label>
-                            <div class="input-group date">
-                                <div><span></span>~<span></span></div>
-                            </div>
+                            <label>开始日期 ~ 结束时间</label>
+                            <div><span id="event_start"></span>  ~  <span id="event_end"></span></div>
                         </div>
                         <div class="form-group">
                             <label>提醒时间</label>
-                            <div>
-
-                            </div>
+                            <div id="event_remindtime"></div>
                         </div>
                     </form>
                 </div>
@@ -196,7 +191,7 @@
 <!-- AdminLTE App -->
 <script src="/static/dist/js/app.min.js"></script>
 <script src="/static/plugins/fullcalendar/lib/moment.min.js"></script>
-<script src="/static/plugins/fullcalendar/fullcalendar.js"></script>
+<script src="/static/plugins/fullcalendar/fullcalendar.min.js"></script>
 <script src="/static/plugins/fullcalendar/lang/zh-cn.js"></script>
 <script src="/static/plugins/datepicker/bootstrap-datepicker.js"></script>
 <script src="/static/plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js"></script>
@@ -206,7 +201,10 @@
 </style>
 <script>
     $(function () {
-        $('#calendar').fullCalendar({
+
+        var _event = null;
+        var $calendar = $('#calendar');
+        $calendar.fullCalendar({
             dayClick: function (date, jsEvent, view) {
                 $("#newTaskForm")[0].reset();
                 $("#startDate").val(date.format());
@@ -218,27 +216,56 @@
                 });
             },
             eventClick:function(calEvent, jsEvent, view){
-                $("#eventModal").modal({
+                //alert(calEvent.id + " : " + calEvent.title);
+                _event = calEvent;
+                $("#event_id").val(calEvent.id);
+                $("#event_title").text(calEvent.title);
+                $("#event_start").text(moment(calEvent.start).format("YYYY-MM-DD"));
+                $("#event_end").text(moment(calEvent.end).format("YYYY-MM-DD"));
+                if(calEvent.remindertime) {
+                    $("#event_remindtime").text(calEvent.remindertime);
+                } else {
+                    $("#event_remindtime").text('无');
+                }
+
+                $("#eventTaskModal").modal({
                     show:true,
                     backdrop:'static'
                 });
             },
-            events:"/task/load",
+            events:"/task/load"
         });
 
-        $('#startDate').datepicker({
+        $('#startDate,#endDate').datepicker({
+            format: 'yyyy-mm-dd',
             todayHighlight: true,
             language: "zh-CN",
             autoclose: true
         });
-        $('#endDate').datepicker({
-            todayHighlight: true,
-            language: "zh-CN",
-            autoclose: true
-        });
+
         $(".my-colorpicker1").colorpicker({
             color:'#61a5e8'
         });
+        $("#saveBtn").click(function(){
+            if(!$("#title").val()) {
+                $("#title").focus();
+                return;
+            }
+            if(moment($("#startDate").val()).isAfter(moment($("#endDate").val()))) {
+                alert("结束时间必须大于开始时间");
+                return;
+            }
+            $.post("/task/new",$("#newTaskForm").serialize()).done(function(result){
+                if(result.state == "success") {
+                    //将返回的日程，渲染到日历控件上
+                    $calendar.fullCalendar( 'renderEvent', result.data );
+                    $("#newTaskModal").modal('hide');
+                }
+            }).fail(function(){
+                alert("服务器异常")
+            });
+        });
+
     });
 </script>
 </body>
