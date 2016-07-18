@@ -314,6 +314,7 @@
                         $select.append(option);
                     }
                 }
+                dateTable.ajax.reload();
             }).fail(function(){
                 alert("服务器异常")
             });
@@ -340,6 +341,7 @@
 
         $("#saveCompanyBtn").click(function () {
             $("#saveCompanyForm").submit();
+
         });
 
         <shiro:hasRole name="经理">
@@ -382,7 +384,6 @@
                 $.post("/customer/edit",$(form).serialize()).done(function(data){
                     if ("success"==data){
                         $("#editModal").modal('hide');
-                        dateTable.ajax.reload();
                     }
                 }).fail(function(){
                     alert("服务器异常")
@@ -434,6 +435,7 @@
 
         $("#editBtn").click(function(){
             $("#editForm").submit();
+            dateTable.ajax.reload();
         });
     });
 </script>
