@@ -8,6 +8,7 @@ import com.kaishengit.mapper.SalesMapper;
 import com.kaishengit.pojo.*;
 import com.kaishengit.service.CustomerService;
 import com.kaishengit.service.SalesService;
+import com.kaishengit.service.TaskService;
 import com.kaishengit.util.ShiroUtil;
 import com.kaishengit.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +37,8 @@ public class SalesController {
     @Inject
     private SalesService salesService;
 
+    @Inject
+    private TaskService taskService;
     @Value("${imagePath}")
     private String savePath;
     /**
@@ -110,6 +113,8 @@ public class SalesController {
         model.addAttribute(salesLogList);
         List<SalesFile>salesFileList = salesService.findSalesFileBySalesId(id);
         model.addAttribute(salesFileList);
+        List<Task> taskList = taskService.findTaskBySalesId(id);
+        model.addAttribute("taskList",taskList);
         return "sales/view";
     }
 

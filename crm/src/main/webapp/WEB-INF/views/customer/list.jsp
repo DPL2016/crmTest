@@ -237,7 +237,7 @@
                 {
                     "data": function (row) {
                         if (row.companyname) {
-                            return '<a href="/customer/'+row.id+'">'+row.name+'</a>' + " - " + '<a href="/customer/'+row.id+'">'+row.companyname+'</a>';
+                            return '<a href="/customer/'+row.id+'">'+row.name+'</a>' + " - " + '<a href="/customer/'+row.companyid+'">'+row.companyname+'</a>';
                         }
                         return '<a href="/customer/'+row.id+'">'+row.name+'</a>';
                     }

@@ -12,9 +12,11 @@ import com.kaishengit.exception.ForbiddenException;
 import com.kaishengit.exception.NotFoundException;
 import com.kaishengit.pojo.Customer;
 import com.kaishengit.pojo.Sales;
+import com.kaishengit.pojo.Task;
 import com.kaishengit.pojo.User;
 import com.kaishengit.service.CustomerService;
 import com.kaishengit.service.SalesService;
+import com.kaishengit.service.TaskService;
 import com.kaishengit.service.UserService;
 import com.kaishengit.util.ShiroUtil;
 import com.kaishengit.util.Strings;
@@ -41,6 +43,8 @@ public class CustomerController {
 
     @Inject
     private UserService userService;
+    @Inject
+    private TaskService taskService;
     /**
      * 显示客户页面
      */
@@ -165,6 +169,8 @@ public class CustomerController {
         model.addAttribute("userList",userList);
         List<Sales> salesList = salesService.findSalesByCustId(id);
         model.addAttribute("salesList",salesList);
+        List<Task> taskList = taskService.findTaskByCustid(id);
+        model.addAttribute("taskList",taskList);
         return "customer/view";
     }
 
@@ -214,5 +220,13 @@ public class CustomerController {
         outputStream.flush();
         outputStream.close();
     }
+
+    @RequestMapping(value = "/task/new",method = RequestMethod.POST)
+    @ResponseBody
+    public String newTask(Task task,String hour,String min){
+        taskService.saveTask(task,hour,min);
+        return "redirect:/customer/"+task.getCustid();
+    }
+
 
 }

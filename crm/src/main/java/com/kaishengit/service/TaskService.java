@@ -49,4 +49,12 @@ public class TaskService {
         String today = DateTime.now().toString("yyyy-MM-dd");
         return taskMapper.findTimeOutTasks(ShiroUtil.getCurrentUserID(),today);
     }
+
+    public List<Task> findTaskByCustid(Integer custid) {
+        return taskMapper.findTaskByCustid(custid);
+    }
+
+    public List<Task> findTaskBySalesId(Integer salesid) {
+        return taskMapper.findTaskBySalesId(salesid);
+    }
 }

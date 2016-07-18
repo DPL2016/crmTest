@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="/static/dist/css/AdminLTE.min.css">
 
     <link rel="stylesheet" href="/static/dist/css/skins/skin-blue.min.css">
+    <link rel="stylesheet" href="/static/plugins/datepicker/datepicker3.css">
+    <link rel="stylesheet" href="/static/plugins/colorpicker/bootstrap-colorpicker.min.css">
     <![endif]-->
 </head>
 
@@ -121,9 +123,23 @@
                     <div class="box box-default">
                         <div class="box-header with-border">
                             <h3 class="box-title"><i class="fa fa-calendar-check-o"></i>待办事项</h3>
+                            <div class="box-tools">
+                                <button class="btn btn-default btn-xs" id="newTask"><i class="fa fa-plus"></i></button>
+                            </div>
                         </div>
                         <div class="box-body">
-                            <h5>暂无代办事项</h5>
+                            <ul class="todo-list">
+                                <c:forEach items="${taskList}" var="task">
+                                    <li>
+                                        <input type="checkbox">
+                                        <span class="text">${task.title}</span>
+                                        <div class="tools">
+                                            <i class="fa fa-trash-o"></i>
+                                        </div>
+                                    </li>
+                                </c:forEach>
+
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -132,6 +148,87 @@
     </div>
     <!-- /.content-wrapper -->
 </div>
+<div class="modal fade" id="newTaskModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">新增代办事项</h4>
+            </div>
+            <div class="modal-body">
+                <form id="newTaskForm" action="/task/new" method="post">
+                    <input type="hidden" name="custid" value="${customer.id}">
+                    <div class="form-group">
+                        <label>待办内容</label>
+                        <input type="text" class="form-control" name="title" id="title">
+                    </div>
+                    <div class="form-group">
+                        <label>开始时间</label>
+                        <div class="input-group date">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                            <input type="text" class="form-control pull-right" name="start" id="startDate">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>结束时间</label>
+                        <div class="input-group date">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                            <input type="text" class="form-control pull-right" name="end" id="endDate">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>提醒时间</label>
+                        <div>
+                            <select name="hour" style="width: 100px">
+                                <option></option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                                <option>6</option>
+                                <option>7</option>
+                                <option>8</option>
+                                <option>9</option>
+                                <option>10</option>
+                                <option>11</option>
+                                <option>0</option>
+                            </select> :
+                            <select name="min" style="width: 100px">
+                                <option></option>
+                                <option>05</option>
+                                <option>10</option>
+                                <option>15</option>
+                                <option>20</option>
+                                <option>25</option>
+                                <option>30</option>
+                                <option>35</option>
+                                <option>40</option>
+                                <option>45</option>
+                                <option>50</option>
+                                <option>55</option>
+                                <option>00</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>显示颜色</label>
+                        <input type="text" class="form-control my-colorpicker1 colorpicker-element" name="color" id="color">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="saveBtn">保存</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <!-- ./wrapper -->
 <div class="modal fade" id="moveModal">
     <div class="modal-dialog">
@@ -171,6 +268,11 @@
 <!-- AdminLTE App -->
 <script src="/static/dist/js/app.min.js"></script>
 
+<script src="/static/plugins/fullcalendar/lib/moment.min.js"></script>
+<script src="/static/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script src="/static/plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js"></script>
+<script src="/static/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
+
 <script>
     $(function(){
         $("#openCust").click(function(){
@@ -189,6 +291,42 @@
         $("#moveBtn").click(function(){
             $("#moveForm").submit();
         });
+        $('#startDate,#endDate').datepicker({
+            format: 'yyyy-mm-dd',
+            todayHighlight: true,
+            language: "zh-CN",
+            autoclose: true
+        });
+
+
+        $("#newTask").click(function(){
+            $("#newTaskModal").modal({
+                show: true,
+                backdrop: 'static',
+                keboard: false
+            });
+        });
+        $(".my-colorpicker1").colorpicker({
+            color:'#61a5e8'
+        });
+        $("#saveBtn").click(function(){
+            if(!$("#title").val()) {
+                $("#title").focus();
+                return;
+            }
+            if(moment($("#startDate").val()).isAfter(moment($("#endDate").val()))) {
+                alert("结束时间必须大于开始时间");
+                return;
+            }
+            $.post("/task/new",$("#newTaskForm").serialize()).done(function(result){
+                if(result.state == "success") {
+                    $("#newTaskModal").modal('hide');
+                }
+            }).fail(function(){
+                alert("服务器异常")
+            });
+        });
+
     });
 </script>
 </body>
