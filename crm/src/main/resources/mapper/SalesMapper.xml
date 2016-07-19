@@ -66,4 +66,27 @@
     <select id="findSalesByCustId" resultType="com.kaishengit.pojo.Sales">
         SELECT * FROM t_sales WHERE custid = #{custid}
     </select>
+    <select id="findSaleCount" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM t_sales WHERE DATE(successtime) >= #{start}
+        and DATE(successtime) &lt;=#{end} and progress = #{state}
+    </select>
+    <select id="findSaleMoney" resultType="java.lang.Float">
+        SELECT ifnull(SUM(price),0) FROM t_sales WHERE DATE(successtime) >= #{start}
+        and DATE(successtime) &lt;=#{end} and progress = #{state}
+    </select>
+    <select id="countProgress" resultType="java.util.Map">
+        SELECT temp.custtype AS `name`,(SELECT count(*) FROM t_sales WHERE t_sales.progress=temp.custtype
+        and date(createtime) >= #{start}
+        and date(createtime) &lt;= #{end}) AS `value`
+        FROM (SELECT "初次接触" AS `custtype`
+        UNION SELECT "确认意向"
+        UNION SELECT "提供合同"
+        UNION SELECT "交易完成"
+        UNION SELECT "交易搁置") as `temp`
+    </select>
+    <select id="totalUserMoney" resultType="java.util.Map">
+        SELECT user.realname,(SELECT ifnull(sum(price),0) FROM
+        t_sales WHERE userid = user.id and date(successtime) >= #{start}
+        and date(successtime) &lt;= #{end} )as price from (SELECT id,realname FROM t_user) as user
+    </select>
 </mapper>

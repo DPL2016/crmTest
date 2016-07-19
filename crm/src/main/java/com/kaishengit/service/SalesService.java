@@ -102,7 +102,7 @@ public class SalesService {
        Sales sales = salesMapper.findSalesById(id);
         sales.setProgress(progress);
         sales.setLasttime(DateTime.now().toString("yyyy-MM-dd"));
-        if ("完成交易".equals(progress)){
+        if ("交易完成".equals(progress)){
             sales.setSuccesstime(DateTime.now().toString("yyyy-MM-dd"));
         }
         salesMapper.update(sales);

@@ -58,5 +58,9 @@
     <select id="findByCustomerId" resultType="com.kaishengit.pojo.Customer">
         SELECT * FROM t_customer WHERE id = #{id}
     </select>
+    <select id="findNewCustomerCount" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM t_customer WHERE DATE(createtime)>=#{start} and date(createtime) &lt;=#{end}
+    </select>
+
 
 </mapper>

@@ -7,7 +7,7 @@ public class Sales implements Serializable {
     private static final long serialVersionUID = -5562166450183527435L;
     private Integer id;
     private String name;
-    private String price;
+    private Float price;
     private Integer custid;
     private String custname;
     private String progress;
@@ -33,11 +33,11 @@ public class Sales implements Serializable {
         this.name = name;
     }
 
-    public String getPrice() {
+    public Float getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(Float price) {
         this.price = price;
     }
 
