@@ -225,7 +225,8 @@
                 </div>
                 <div class="modal-body">
                     <form id="newTaskForm" action="/task/new" method="post">
-                        <input type="hidden" name="saleid" value="${sales.id}">
+                        <input type="hidden" name="salesid" value="${sales.id}">
+                        <input type="hidden" name="custid" value="${sales.custid}">
                         <div class="form-group">
                             <label>待办内容</label>
                             <input type="text" class="form-control" name="title" id="title">
@@ -377,6 +378,13 @@
             }
         });
         </shiro:hasRole>
+
+        $('#startDate,#endDate').datepicker({
+            format: 'yyyy-mm-dd',
+            todayHighlight: true,
+            language: "zh-CN",
+            autoclose: true
+        });
 
         $("#newTask").click(function(){
             $("#newTaskModal").modal({

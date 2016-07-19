@@ -175,7 +175,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     return "￥" + row.price;
                 }},
                 {"data":function(row) {
-                    if(row.progress == '完成交易') {
+                    if(row.progress == '交易完成') {
                         return "<span class='label label-success'>"+row.progress+"</span>";
                     }
                     if(row.progress == '交易搁置') {

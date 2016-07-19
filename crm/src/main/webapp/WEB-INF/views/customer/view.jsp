@@ -324,6 +324,7 @@
             $.post("/task/new",$("#newTaskForm").serialize()).done(function(result){
                 if(result.state == "success") {
                     $("#newTaskModal").modal('hide');
+                    window.location.reload();
                 }
             }).fail(function(){
                 alert("服务器异常")
