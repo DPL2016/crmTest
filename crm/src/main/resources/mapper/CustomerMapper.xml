@@ -40,7 +40,7 @@
         </where>
     </select>
     <select id="findByType" resultType="com.kaishengit.pojo.Customer">
-        SELECT * FROM t_customer WHERE type = #{type}
+        SELECT * FROM t_customer WHERE type = #{type} and userid = #{userid}
     </select>
     <select id="findById" resultType="Customer">
         SELECT * FROM t_customer WHERE id = #{companyid}

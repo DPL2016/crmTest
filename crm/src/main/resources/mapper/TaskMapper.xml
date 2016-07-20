@@ -22,7 +22,7 @@
         SELECT * FROM t_task WHERE userid = #{userId} and date(`end`) &lt; #{today} and done = 0
     </select>
     <select id="findTaskByCustid" resultType="com.kaishengit.pojo.Task">
-        SELECT * FROM t_task WHERE custid  = #{custid}
+        SELECT * FROM t_task WHERE custid  = #{custId} and userid = #{userId}
     </select>
     <select id="findTaskBySalesId" resultType="com.kaishengit.pojo.Task">
         SELECT * FROM t_task WHERE salesid = #{salesid}

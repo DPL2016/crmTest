@@ -18,7 +18,7 @@ public interface SalesMapper {
 
     Sales findSalesById(Integer id);
 
-    List<Sales> findSalesByCustId(Integer custid);
+    List<Sales> findSalesByCustId(@Param("userId") Integer userid,@Param("custId") Integer custid);
 
     void update(Sales sales);
 

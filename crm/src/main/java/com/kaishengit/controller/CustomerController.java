@@ -157,7 +157,7 @@ public class CustomerController {
         if (customer==null){
             throw new NotFoundException();
         }
-        if (customer.getUserid()!=null&&customer.getUserid().equals(ShiroUtil.getCurrentUserID())&&!ShiroUtil.isManager()){
+        if (customer.getUserid()!=null&&!customer.getUserid().equals(ShiroUtil.getCurrentUserID())&&!ShiroUtil.isManager()){
             throw new ForbiddenException();
         }
         model.addAttribute("customer",customer);
@@ -167,9 +167,9 @@ public class CustomerController {
         }
         List<User>userList  = userService.findAllUser();
         model.addAttribute("userList",userList);
-        List<Sales> salesList = salesService.findSalesByCustId(id);
+        List<Sales> salesList = salesService.findSalesByCustId(ShiroUtil.getCurrentUserID(),id);
         model.addAttribute("salesList",salesList);
-        List<Task> taskList = taskService.findTaskByCustid(id);
+        List<Task> taskList = taskService.findTaskByCustid(ShiroUtil.getCurrentUserID(),id);
         model.addAttribute("taskList",taskList);
         return "customer/view";
     }

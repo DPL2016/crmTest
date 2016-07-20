@@ -42,7 +42,7 @@ public class CustomerService {
     }
 
     public List<Customer> findAllCompany() {
-        return customerMapper.findByType(Customer.CUSTOMER_TYPE_COMPANY);
+        return customerMapper.findByType(ShiroUtil.getCurrentUserID(),Customer.CUSTOMER_TYPE_COMPANY);
     }
 
     /**

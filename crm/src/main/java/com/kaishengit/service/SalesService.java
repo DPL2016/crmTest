@@ -81,8 +81,8 @@ public class SalesService {
         return salesMapper.findSalesById(id);
     }
 
-    public List<Sales> findSalesByCustId(Integer custid) {
-        return salesMapper.findSalesByCustId(custid);
+    public List<Sales> findSalesByCustId(Integer userid,Integer custid) {
+        return salesMapper.findSalesByCustId(userid,custid);
     }
 
     public List<SalesLog> findSalesBySalesId(Integer salesid) {

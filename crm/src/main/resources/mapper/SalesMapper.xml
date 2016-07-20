@@ -64,7 +64,7 @@
         SELECT * FROM t_sales WHERE id = #{id}
     </select>
     <select id="findSalesByCustId" resultType="com.kaishengit.pojo.Sales">
-        SELECT * FROM t_sales WHERE custid = #{custid}
+        SELECT * FROM t_sales WHERE custid = #{custId} and userid = #{userId}
     </select>
     <select id="findSaleCount" resultType="java.lang.Long">
         SELECT COUNT(*) FROM t_sales WHERE DATE(successtime) >= #{start}

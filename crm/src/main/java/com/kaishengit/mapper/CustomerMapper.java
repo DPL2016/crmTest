@@ -14,7 +14,7 @@ public interface CustomerMapper {
 
     Long countByParam(Map<String, Object> param);
 
-    List<Customer> findByType(String type);
+    List<Customer> findByType(@Param("userid") Integer userid,@Param("type") String type);
 
     Customer findById(Integer companyid);
 
