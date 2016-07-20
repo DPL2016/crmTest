@@ -408,6 +408,7 @@
             $.post("/task/new",$("#newTaskForm").serialize()).done(function(result){
                 if(result.state == "success") {
                     $("#newTaskModal").modal('hide');
+                    window.history.go(0);
                 }
             }).fail(function(){
                 alert("服务器异常")
