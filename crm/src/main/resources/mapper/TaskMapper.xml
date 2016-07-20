@@ -27,4 +27,7 @@
     <select id="findTaskBySalesId" resultType="com.kaishengit.pojo.Task">
         SELECT * FROM t_task WHERE salesid = #{salesid}
     </select>
+    <select id="findDoneTask" resultType="com.kaishengit.pojo.Task">
+        SELECT * FROM t_task WHERE done = 1
+    </select>
 </mapper>

@@ -243,6 +243,11 @@
                     show:true,
                     backdrop:'static'
                 });
+                if (calEvent.done==1){
+                    $("#doneBtn").hide();
+                }else {
+                    $("#doneBtn").show();
+                }
             },
             events:"/task/load"
         });
@@ -280,7 +285,7 @@
         $("#delBtn").click(function(){
             var id  = $("#event_id").val();
             if (confirm("确认要删除吗？")){
-                $.get("/task/del"+id).done(function(data){
+                $.get("/task/del/"+id).done(function(data){
                     if ("success"==data){
                         $calendar.fullCalendar('removeEvents',id);
                         $("#eventTaskModal").modal('hide');
@@ -299,6 +304,7 @@
                     _event.color="#cccccc";
                     $calendar.fullCalendar('updateEvent',_event);
                     $("#eventTaskModal").modal('hide');
+
                 }
             }).fail(function(){
                 alert("服务器异常")

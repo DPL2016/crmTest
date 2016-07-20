@@ -21,6 +21,8 @@ public class TaskController {
     public String show(Model model) {
         List<Task> timeoutTaskList = taskService.findTimeOutTasks();
         model.addAttribute("timeoutTaskList",timeoutTaskList);
+        List<Task> taskDoneList = taskService.findDoneTask();
+        model.addAttribute("taskDoneList",taskDoneList);
         return "task/view";
     }
 

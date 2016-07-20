@@ -57,4 +57,8 @@ public class TaskService {
     public List<Task> findTaskBySalesId(Integer salesid) {
         return taskMapper.findTaskBySalesId(salesid);
     }
+
+    public List<Task> findDoneTask() {
+        return taskMapper.findDoneTask();
+    }
 }
