@@ -34,7 +34,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                403:权限不足
+                404:没有找到该页面
             </h1>
             <ol class="breadcrumb">
                 <li><a href="/home"><i class="fa fa-dashboard"></i>主页</a></li>
@@ -44,15 +44,14 @@
 
         <section class="content">
             <div class="error-page">
-                <h2 class="headline text-yellow"> 403</h2>
+                <h2 class="headline text-yellow"> 404</h2>
 
                 <div class="error-content">
-                    <h3><i class="fa fa-warning text-yellow"></i> 权限不足！</h3>
+                    <img src="/static/dist/img/404.JPG>"/>
+                    <h3>
+                    <i class="fa fa-warning text-yellow "></i>
+                    页面未找到 <a href="/home">点击此处</a> 返回主页 </h3>
 
-                    <p>
-                        您没有权限访问该页面.
-                        您可以 <a href="/home">点击此处</a> 返回主页.
-                    </p>
                 </div>
                 <!-- /.error-content -->
             </div>
