@@ -104,10 +104,16 @@
                 <div class="col-md-8">
                     <div class="box box-info">
                         <div class="box-header with-border">
-                            <h3 class="box-title"><i class="fa fa-list"></i>项目列表</h3>
+                            <h3 class="box-title"><i class="fa fa-list"></i>销售机会</h3>
                         </div>
                         <div class="box-body">
-                            <h5>暂无项目</h5>
+                            <c:forEach items="${salesList}" var="sales">
+                               <c:choose>
+                                   <c:when test="${not empty sales}">
+                                       <a href="/sales/${sales.id}">${sales.name}</a><br>
+                                   </c:when>
+                               </c:choose>
+                            </c:forEach>
                         </div>
                     </div>
                 </div>
