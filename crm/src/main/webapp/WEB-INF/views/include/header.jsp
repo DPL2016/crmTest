@@ -1,5 +1,5 @@
-<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <!-- Main Header -->
 <header class="main-header">
 
@@ -8,15 +8,14 @@
         <!-- mini logo for sidebar mini 50x50 pixels -->
         <span class="logo-mini">CRM</span>
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><b>DwT </b>CRM</span>
+        <span class="logo-lg"><b>DwT</b>CRM</span>
     </a>
-
 
     <!-- Header Navbar -->
     <nav class="navbar navbar-static-top" role="navigation">
         <!-- Sidebar toggle button-->
         <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-            <span class="sr-only">Toggle navigation</span>
+            <span class="fa fa-reorder"></span>
         </a>
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
@@ -120,14 +119,13 @@
                 <li class="dropdown">
                     <!-- Menu Toggle Button -->
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                       <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                        <span class="hidden-xs"><shiro:principal property="realname"/> </span>
+                        <span class="hidden-xs"><shiro:principal property="realname"/></span>
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="/user/password">修改密码</a></li>
                         <li><a href="/user/log">登录日志</a></li>
                         <li class="divider"></li>
-                       <li><a href="/logout">安全退出</a> </li>
+                        <li><a href="/logout">安全退出</a></li>
                     </ul>
                 </li>
 
