@@ -105,7 +105,7 @@ public class SalesController {
         if (sales==null){
             throw new NotFoundException();
         }
-        if (!sales.getUsername().equals(ShiroUtil.getCurrentRealName())&&ShiroUtil.isManager()){
+        if (!sales.getUsername().equals(ShiroUtil.getCurrentRealName())&&!ShiroUtil.isManager()){
             throw new ForbiddenException();
         }
         model.addAttribute("sales",sales);

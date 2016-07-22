@@ -21,14 +21,13 @@ public class TaskController {
     public String show(Model model) {
         List<Task> timeoutTaskList = taskService.findTimeOutTasks();
         model.addAttribute("timeoutTaskList",timeoutTaskList);
-        List<Task> taskDoneList = taskService.findDoneTask();
-        model.addAttribute("taskDoneList",taskDoneList);
         return "task/view";
     }
 
     @RequestMapping(value = "/load", method = RequestMethod.GET)
     @ResponseBody
-    public List<Task> load() {
+    public List<Task> load(Model model) {
+
         return taskService.findTaskByUserId();
     }
 

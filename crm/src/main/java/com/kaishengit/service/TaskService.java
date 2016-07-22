@@ -58,7 +58,4 @@ public class TaskService {
         return taskMapper.findTaskBySalesId(salesid);
     }
 
-    public List<Task> findDoneTask() {
-        return taskMapper.findDoneTask();
-    }
 }

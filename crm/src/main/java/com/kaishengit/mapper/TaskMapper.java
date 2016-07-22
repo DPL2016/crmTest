@@ -23,5 +23,4 @@ public interface TaskMapper {
 
     List<Task> findTaskBySalesId(Integer salesid);
 
-    List<Task> findDoneTask();
 }

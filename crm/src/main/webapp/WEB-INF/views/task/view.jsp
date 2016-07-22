@@ -8,7 +8,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>CRM 客户信息</title>
+    <title>DwT | 客户信息</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
@@ -57,22 +57,30 @@
                 </div>
                 <div class="col-md-4">
                     <div class="box box-default">
-                        <div class="box-header with-border">
-                            <h3 class="box-title"><i class="fa fa-calendar-check-o"></i>已经延期的事项</h3>
-                        </div>
-                        <div class="box-body">
-                            <ul class="todo-list">
-                                <c:forEach items="${timeoutTaskList}" var="task">
-                                    <li>
-                                        <input type="checkbox">
-                                        <span class="text">${task.title}</span>
-                                        <div class="tools">
-                                            <i class="fa fa-trash-o"></i>
-                                        </div>
-                                    </li>
-                                </c:forEach>
+                        <div class="box box-solid">
+                            <div class="box-header with-border">
+                                <h3 class="box-title"><i class="fa fa-calendar-check-o"></i>我的超时事项</h3>
 
-                            </ul>
+                                <div class="box-tools">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="box-body no-padding" style="display: block;">
+                                <ul class="nav nav-pills nav-stacked todo-list">
+                                    <c:forEach items="${timeoutTaskList}" var="task">
+                                        <li>
+
+                                            <span class="text">${task.title}</span>
+                                            <div class="tools">
+                                                <i rel="${task.id}" class="fa  fa-check-square-o" id="done" style="color: #008d4c"></i>
+                                                <i rel="${task.id}" class="fa fa-trash-o" id="del"></i>
+                                            </div>
+                                        </li>
+                                    </c:forEach>
+                                </ul>
+                            </div>
+                            <!-- /.box-body -->
                         </div>
                     </div>
                 </div>
@@ -275,6 +283,7 @@
                 if(result.state == "success") {
                     $calendar.fullCalendar( 'renderEvent', result.data );
                     $("#newTaskModal").modal('hide');
+                    window.history.go(0);
                 }
             }).fail(function(){
                 alert("服务器异常")
@@ -289,6 +298,22 @@
                     if ("success"==data){
                         $calendar.fullCalendar('removeEvents',id);
                         $("#eventTaskModal").modal('hide');
+                        window.history.go(0);
+                    }
+                }).fail(function(){
+                    alert("服务器异常");
+                });
+            }
+        });
+
+        $("#del").click(function(){
+            var id = $("#del").attr("rel");
+            if(confirm("确认要删除吗？")){
+                $.get("/task/del/"+id).done(function(data){
+                    if ("success"==data){
+                        $calendar.fullCalendar('removeEvents',id);
+                        $("#eventTaskModal").modal('hide');
+                        window.history.go(0);
                     }
                 }).fail(function(){
                     alert("服务器异常");
@@ -309,6 +334,20 @@
             }).fail(function(){
                 alert("服务器异常")
             });
+        });
+        $("#done").click(function(){
+            var id = $("#done").attr("rel");
+            if(confirm("确认要标记为已完成？")){
+                $.post("/task/"+id+"/done").done(function(result){
+                    if (result.state=="success"){
+                        _event.color="#cccccc";
+                        $calendar.fullCalendar('updateEvent',_event);
+                        $("#eventTaskModal").modal('hide');
+                    }
+                }).fail(function(){
+                    alert("服务器异常")
+                });
+            }
         });
     });
 </script>
